@@ -125,14 +125,14 @@ const resetEvents = () => {
 // Quadrants are done with QuadsKeepr.js
 // This starts off with 7 cols and 6 rows (each has 1 on each side for padding)
 function resetQuadrants() {
-    window.QuadsKeeper = new QuadsKeepr({
+    window.quadsKeeper = new QuadsKeepr({
         num_rows: 5,
         num_cols: 6,
         screen_width: window.innerWidth,
         screen_height: window.innerHeight,
         tolerance: unitsized2,
         onUpdate: function () {
-            window.mapsManager.spawnMap((gamescreen.right + QuadsKeeper.getOutDifference()) / unitsize);
+            window.mapsManager.spawnMap((gamescreen.right + window.quadsKeeper.getOutDifference()) / unitsize);
         },
         onCollide: false
     });
@@ -167,9 +167,9 @@ function scrollWindow(x, y) {
     shiftAll(characters, xinv, yinv);
     shiftAll(solids, xinv, yinv);
     shiftAll(scenery, xinv, yinv);
-    shiftAll(QuadsKeeper.getQuadrants(), xinv, yinv);
+    shiftAll(window.quadsKeeper.getQuadrants(), xinv, yinv);
     shiftElements(texts, xinv, yinv);
-    QuadsKeeper.updateQuadrants(xinv);
+    window.quadsKeeper.updateQuadrants(xinv);
 
     if (window.playediting) scrollEditor(x, y);
 }
@@ -195,5 +195,5 @@ function scrollPlayer(x, y, see) {
     scrollWindow(x, y);
     setLeft(player, saveleft, see);
     setTop(player, savetop + y * unitsize, see);
-    QuadsKeeper.updateQuadrants();
+    window.quadsKeeper.updateQuadrants();
 }

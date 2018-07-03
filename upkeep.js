@@ -1,81 +1,63 @@
 /* Upkeep.js */
 
 // Contains functions associated with the upkeep
-
 function upkeep() {
     if (window.paused) return;
-    // window.nextupk = requestAnimationFrame(upkeep);
-    window.nextupk = setTimeout(upkeep, timer);
+    window.nextupk = setTimeout(upkeep, window.timer);
 
     // See utility.js::fastforward
-    for (var i = window.speed; i > 0; --i) {
-
-        // Adjust for differences in performance
-        adjustFPS();
-
-        // Quadrants upkeep
-        QuadsKeeper.determineAllQuadrants(solids);
-
-        // Solids upkeep
-        maintainSolids();
-
-        // Character upkeep
-        maintainCharacters();
-
-        // Player specific
-        maintainPlayer();
-
-        // Texts upkeep, if there are any
-        if (texts.length) maintainTexts();
-
-        // Events upkeep
-        window.timeHandler.handleEvents();
-        // handleEvents();
-
-        refillCanvas();
-
+    adjustFPS(); // Adjust for differences in performance
+    window.quadsKeeper.determineAllQuadrants(window.solids); // Quadrants upkeep
+    maintainSolids(); // Solids upkeep
+    maintainCharacters(); // Character upkeep
+    maintainPlayer(); // Player specific
+    if (texts.length) {
+        maintainTexts(); // Texts upkeep, if there are any
     }
+    window.timeHandler.handleEvents(); // Events upkeep
+    refillCanvas();
 }
 
-function adjustFPS() {
-    window.time_now = now();
-    var time_diff = time_now - time_prev,
-        fps_actual = roundDigit(1000 / time_diff, .001);
+const adjustFPS = () => {
+    window.time_now = window.now();
+    const time_diff = time_now - time_prev;
+    const fps_actual = window.roundDigit(1000 / time_diff, .001);
 
-    window.fps = roundDigit((.7 * fps) + (.3 * fps_actual), .01);
-    window.realtime = fps_target / fps;
+    window.fps = window.roundDigit((.7 * fps) + (.3 * fps_actual), .01);
+    window.realtime = window.fps_target / fps;
 
     window.time_prev = time_now;
-}
+};
 
 function pause() {
-    if (paused && !window.nextupk) {
+    if (window.paused && !window.nextupk) {
         return;
     }
     cancelAnimationFrame(nextupk);
-    paused = true;
+    window.paused = true;
 }
 
 function unpause() {
-    if (!paused) return;
+    if (!window.paused) return;
     window.nextupk = requestAnimationFrame(upkeep);
-    paused = false;
+    window.paused = false;
 }
 
 // Solids by themselves don't really do much
-function maintainSolids() {
-    for (var i = 0, solid; i < solids.length; ++i) {
-        solid = solids[i];
-        if (solid.alive) {
-            if (solid.movement) solid.movement(solid);
+const maintainSolids = () => {
+    for (let i = 0; i < window.solids.length; ++i) {
+        const solid = window.solids[i];
+        if (solid.alive && solid.movement) {
+            solid.movement(solid);
         }
-        if (!solid.alive || solid.right < QuadsKeeper.getDelX())
-            deleteThing(solid, solids, i);
+        if (!solid.alive || solid.right < window.quadsKeeper.getDelX()) {
+            deleteThing(solid, window.solids, i);
+        }
     }
 }
 
-function maintainCharacters(update) {
-    var delx = gamescreen.right + QuadsKeeper.getOutDifference(),
+function maintainCharacters() {
+    var delx = window.gamescreen.right + window.quadsKeeper.getOutDifference(),
         character, i;
     for (i = 0; i < characters.length; ++i) {
         character = characters[i];
@@ -87,7 +69,7 @@ function maintainCharacters(update) {
 
         // Position updating and collision detection
         updatePosition(character);
-        QuadsKeeper.determineThingQuadrants(character);
+        window.quadsKeeper.determineThingQuadrants(character);
         character.under = character.undermid = false;
         determineThingCollisions(character);
 
@@ -121,12 +103,16 @@ function maintainCharacters(update) {
     }
 }
 
-function maintainPlayer(update) {
-    if (!player.alive) return;
+function maintainPlayer() {
+    if (!player.alive) {
+        return;
+    }
 
     // Player is falling
     if (player.yvel > 0) {
-        if (!map_settings.underwater) player.keys.jump = 0;
+        if (!map_settings.underwater) {
+            player.keys.jump = 0;
+        }
         // Jumping?
         if (!player.jumping) {
             // Paddling? (from falling off a solid)
@@ -163,26 +149,29 @@ function maintainPlayer(update) {
     if (player.xvel > 0) {
         if (player.right > gamescreen.middlex) {
             // If Player is to the right of the gamescreen's middle, move the gamescreen
-            if (player.right > gamescreen.right - gamescreen.left)
+            if (player.right > gamescreen.right - gamescreen.left) {
                 player.xvel = min(0, player.xvel);
+            }
         }
-    }
-    // Player is moving to the left
-    else if (player.left < 0) {
+    } else if (player.left < 0) {
+        // Player is moving to the left
         // Stop Player from going to the left.
         player.xvel = max(0, player.xvel);
     }
 
     // Player is hitting something (stop jumping)
-    if (player.under) player.jumpcount = 0;
+    if (player.under) {
+        player.jumpcount = 0;
+    }
 
     // Scrolloffset is how far over the middle player's right is
     // It's multiplied by 0 or 1 for map.canscroll
-    window.scrolloffset = (map_settings.canscroll/* || (map.random && !map.noscroll)*/) * (player.right - gamescreen.middlex);
+    window.scrolloffset = map_settings.canscroll * (player.right - gamescreen.middlex);
     if (scrolloffset > 0) {
-        scrollWindow(lastscroll = round(min(player.scrollspeed, scrolloffset)));
+        scrollWindow(window.lastscroll = round(min(player.scrollspeed, scrolloffset)));
+    } else {
+        window.lastscroll = 0;
     }
-    else lastscroll = 0;
 }
 
 // Deletion checking is done by an interval set in shiftToLocation

@@ -34,7 +34,7 @@ function resetMapsManager() {
         },
         entry_default: "plain",
         on_entry: function () {
-            window.mapsManager.spawnMap((gamescreen.right + QuadsKeeper.getOutDifference()) / unitsize);
+            window.mapsManager.spawnMap((gamescreen.right + window.quadsKeeper.getOutDifference()) / unitsize);
         },
         macros: {
             "Floor": makeFloor,

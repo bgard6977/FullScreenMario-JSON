@@ -5,14 +5,15 @@
 
 // Expensive - use only on clearing
 function clearAllTimeouts() {
-    var id = setTimeout(function () {
-    });
-    while (id--) clearTimeout(id);
+    let id = setTimeout(() => {});
+    while (id--) {
+        clearTimeout(id);
+    }
 }
 
 // Width and height are given as number of pixels (to scale; unitsize) 
 function getCanvas(width, height, stylemult) {
-    var canv = createElement("canvas", {
+    const canv = createElement("canvas", {
         width: width,
         height: height
     });
@@ -33,52 +34,6 @@ function getCanvas(width, height, stylemult) {
     return canv;
 }
 
-function step(num) {
-    unpause();
-    upkeep();
-    pause();
-    if (num > 0) step(num - 1);
-}
-
-function fastforward(num) {
-    window.speed = max(0, parseInt(num || 0)) + 1;
-}
-
-function toggleFastFWD(num) {
-    if (!window.fastforwarding) {
-        fastforward(2);
-        window.fastforwarding = true;
-    }
-    else {
-        fastforward(0);
-        window.fastforwarding = false;
-    }
-}
-
-function specifyTimer(timerin) {
-    // Only use if you're not worried about losing the benefits of requestAnimationFrame
-    // Also, this kills performance. Works best with smaller windows!
-    timer = timerin;
-    requestAnimationFrame = function (func) {
-        window.setTimeout(func, timer);
-    };
-}
-
-function changeUnitsize(num) {
-    if (!num) return;
-    resetUnitsize(num);
-
-    function setter(arr) {
-        for (i in arr) {
-            updateSize(arr[i]);
-            updatePosition(arr[i]);
-        }
-    }
-
-    setter(solids);
-    setter(characters);
-}
-
 // num = 1 by default
 // 1 = floor(0->2) = 50% chance
 // 2 = floor(0->3) = 67% chance
@@ -92,7 +47,7 @@ function randSign(num) {
     return randTrue(num) * 2 - 1;
 }
 
-function randBoolJS(num) {
+function randBoolJS() {
     return floor(random() * 2);
 }
 
@@ -850,7 +805,9 @@ function unflipVert(me) {
 // Javascript memory management, you are bad and should feel bad.
 function deleteThing(me, array, arrayloc) {
     array.splice(arrayloc, 1);
-    if (me.ondelete) me.ondelete();
+    if (me.ondelete) {
+        me.ondelete();
+    }
 }
 
 function switchContainers(me, outer, inner) {

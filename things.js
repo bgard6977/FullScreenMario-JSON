@@ -494,9 +494,9 @@ function thingProcess(type, settings, defaults) {
 
     // Maximum quadrants (for QuadsKeeper)
     var maxquads = 4, num;
-    if ((num = floor(this.width * unitsize / QuadsKeeper.getQuadWidth())) > 0)
+    if ((num = floor(this.width * unitsize / window.quadsKeeper.getQuadWidth())) > 0)
         maxquads += ((num + 1) * maxquads / 2);
-    if ((num = floor(this.height * unitsize / QuadsKeeper.getQuadHeight())) > 0)
+    if ((num = floor(this.height * unitsize / window.quadsKeeper.getQuadHeight())) > 0)
         maxquads += ((num + 1) * maxquads / 2);
     this.maxquads = maxquads;
     this.quadrants = new Array(this.maxquads);
@@ -610,7 +610,7 @@ function spawnText(me, settings) {
 
 // Set at the end of shiftToLocation
 function checkTexts() {
-    var delx = QuadsKeeper.getDelX(),
+    var delx = window.quadsKeeper.getDelX(),
         element, me, i;
     for (i = texts.length - 1; i >= 0; --i) {
         me = texts[i]

@@ -15,7 +15,7 @@
 
 function resetThings() {
     // The default things will need to be manipulated
-    window.ObjectMaker = new ObjectMakr({
+    window.objectMaker = new ObjectMakr({
         on_make: "onMake",
         store_type: "title",
         index_map: {
@@ -556,7 +556,7 @@ function thingProcessAttributes(thing, attributes) {
 // The primary function for placing a thing on the map
 function addThing(me, left, top) {
     // If me is a string (e.g. 'addThing("Goomba", ...)), make a new thing with that
-    if (typeof(me) == "string") me = ObjectMaker.make(me);
+    if (typeof(me) == "string") me = window.objectMaker.make(me);
 
     // Place the Thing in the game and in its correct grouping array
     placeThing(me, left, top);
@@ -663,7 +663,7 @@ function fireDeleted() {
 }
 
 function fireExplodes(me) {
-    var fire = ObjectMaker.make("Firework");
+    var fire = window.objectMaker.make("Firework");
     addThing(fire, me.left - fire.width / 2, me.top - fire.height / 2);
     fire.animate(fire);
     killNormal(me);
@@ -694,7 +694,7 @@ function moveShell(me) {
         me.height += unitsized8;
         updateSize(me);
     } else if (me.counting == 490) {
-        var spawn = ObjectMaker.make(me.spawntype, {smart: me.smart});
+        var spawn = window.objectMaker.make(me.spawntype, {smart: me.smart});
         addThing(spawn, me.left, me.bottom - spawn.height * unitsize);
         killNormal(me);
     }
@@ -719,7 +719,7 @@ function hitShell(one, two) {
         if (one.type.split(" ")[0] == "koopa") {
             // If the enemy is a koopa, make it a shell
             // To do: automate this for things with shells (koopas, beetles)
-            var spawn = ObjectMaker.make("Shell", {smart: one.smart});
+            var spawn = window.objectMaker.make("Shell", {smart: one.smart});
             addThing(spawn, one.left, one.bottom - spawn.height * unitsize);
             killFlip(spawn);
             killNormal(one);
@@ -891,7 +891,7 @@ function jumpEnemy(me, enemy) {
 function killGoomba(me, big) {
     if (!me.alive) return;
     if (!big) {
-        var squash = ObjectMaker.make("DeadGoomba");
+        var squash = window.objectMaker.make("DeadGoomba");
         addThing(squash, me.left, me.bottom - squash.height * unitsize);
         window.timeHandler.addEvent(killNormal, 21, squash);
         killNormal(me);
@@ -903,8 +903,11 @@ function killGoomba(me, big) {
 function killKoopa(me, big) {
     if (!me.alive) return;
     var spawn;
-    if ((big && big != 2) || me.winged) spawn = ObjectMaker.make("Koopa", {smart: me.smart});
-    else spawn = ObjectMaker.make("Shell", {smart: me.smart});
+    if ((big && big != 2) || me.winged) {
+        spawn = window.objectMaker.make("Koopa", {smart: me.smart});
+    } else {
+        spawn = ObjectMaker.make("Shell", {smart: me.smart});
+    }
     // Puts it on stack, so it executes immediately after upkeep
     window.timeHandler.addEvent(
         function (spawn, me) {
@@ -920,7 +923,7 @@ function killKoopa(me, big) {
 // The visual representation of a pirhana is visual_scenery; the collider is a character
 function movePirhanaInit(me) {
     me.hidden = true;
-    var scenery = me.visual_scenery = ObjectMaker.make("PirhanaScenery");
+    var scenery = me.visual_scenery = window.objectMaker.make("PirhanaScenery");
     addThing(scenery, me.left, me.top);
     window.timeHandler.addSpriteCycle(scenery, ["one", "two"]);
     me.movement = movePirhanaNew;
@@ -1085,7 +1088,7 @@ function throwHammer(me, count) {
             if (!characterIsAlive(me)) return;
             // Throw the hammer...
             switchClass(me, "throwing", "thrown");
-            addThing(ObjectMaker.make("Hammer"), me.left - unitsizet2, me.top - unitsizet2);
+            addThing(window.objectMaker.make("Hammer"), me.left - unitsizet2, me.top - unitsizet2);
         }
         // ...and go again
         if (count > 0) {
@@ -1118,7 +1121,7 @@ function moveCannonInit(me) {
         function (me) {
             if (player.right > me.left - unitsizet8 && player.left < me.right + unitsizet8)
                 return; // don't fire if Player is too close
-            var spawn = ObjectMaker.make("BulletBill");
+            var spawn = window.objectMaker.make("BulletBill");
             if (objectToLeft(player, me)) {
                 addThing(spawn, me.left, me.top);
                 spawn.direction = spawn.moveleft = true;
@@ -1216,7 +1219,7 @@ function startCheepSpawn() {
     return map_settings.zone_cheeps = window.timeHandler.addEventInterval(
         function () {
             if (!map_settings.zone_cheeps) return true;
-            var spawn = ObjectMaker.make("CheepCheep", {smart: true, flying: true});
+            var spawn = window.objectMaker.make("CheepCheep", {smart: true, flying: true});
             addThing(spawn, Math.random() * player.left * player.maxspeed / unitsized2, gamescreen.height * unitsize);
             spawn.xvel = Math.random() * player.maxspeed;
             spawn.yvel = unitsize * -2.33;
@@ -1276,7 +1279,7 @@ function throwSpiny(me) {
     switchClass(me, "out", "hiding");
     window.timeHandler.addEvent(function (me) {
         if (me.dead) return false;
-        var spawn = ObjectMaker.make("SpinyEgg");
+        var spawn = window.objectMaker.make("SpinyEgg");
         addThing(spawn, me.left, me.top);
         spawn.yvel = unitsize * -2.1;
         switchClass(me, "hiding", "out");
@@ -1293,7 +1296,7 @@ function moveSpinyEgg(me) {
 }
 
 function createSpiny(me) {
-    var spawn = ObjectMaker.make("Spiny");
+    var spawn = window.objectMaker.make("Spiny");
     addThing(spawn, me.left, me.top);
     spawn.moveleft = objectToLeft(player, spawn);
     killNormal(me);
@@ -1303,8 +1306,8 @@ function createSpiny(me) {
 function killBeetle(me, big) {
     if (!me.alive) return;
     var spawn;
-    if (big && big != 2) spawn = ObjectMaker.make("Koopa", {smart: me.smart});
-    else spawn = ObjectMaker.make("BeetleShell", {smart: me.smart});
+    if (big && big != 2) spawn = window.objectMaker.make("Koopa", {smart: me.smart});
+    else spawn = window.objectMaker.make("BeetleShell", {smart: me.smart});
     // Puts it on stack, so it executes immediately after upkeep
     window.timeHandler.addEvent(
         function (spawn, me) {
@@ -1382,7 +1385,7 @@ function coinEmergeMoveParent(me) {
  */
 function placePlayer(xloc, yloc) {
     clearOldPlayer();
-    window.player = ObjectMaker.make("Player", {
+    window.player = window.objectMaker.make("Player", {
         gravity: map_settings.gravity,
         keys: new Keys(),
         power: StatsHolder.get("power")
@@ -1707,7 +1710,7 @@ function playerPaddles(me) {
 }
 
 function playerBubbles() {
-    let bubble = ObjectMaker.make("Bubble");
+    let bubble = window.objectMaker.make("Bubble");
     addThing(bubble, player.right, player.top);
 }
 
@@ -1781,7 +1784,7 @@ function playerFires() {
     if (player.numballs >= 2) return;
     ++player.numballs;
     addClass(player, "firing");
-    var ball = ObjectMaker.make("Fireball", {
+    var ball = window.objectMaker.make("Fireball", {
         moveleft: player.moveleft,
         speed: unitsize * 1.75,
         gravity: map_settings.gravity * 1.56,
@@ -1998,7 +2001,7 @@ function brickBump(me, character) {
         window.timeHandler.addEvent(
             function (me) {
                 var contents = me.contents,
-                    out = ObjectMaker.make(contents);
+                    out = window.objectMaker.make(contents);
                 addThing(out, me.left, me.top);
                 setMidXObj(out, me, true);
                 out.blockparent = me;
@@ -2033,7 +2036,7 @@ function brickBreak(me, character) {
 
 function placeShards(me) {
     for (let i = 0, shard; i < 4; ++i) {
-        shard = ObjectMaker.make("BrickShard");
+        shard = window.objectMaker.make("BrickShard");
         addThing(shard,
             me.left + (i < 2) * me.width * unitsize - unitsizet2,
             me.top + (i % 2) * me.height * unitsize - unitsizet2);
@@ -2071,7 +2074,7 @@ function blockBump(me, character) {
 
 // out is a coin by default, but can also be other things - [1] and [2] are arguments
 function blockContentsEmerge(me) {
-    var out = ObjectMaker.make(me.contents);
+    var out = window.objectMaker.make(me.contents);
     addThing(out, me.left, me.top);
     setMidXObj(out, me, true);
     out.blockparent = me;
@@ -2332,7 +2335,7 @@ function collideCastleNPC(me, collider) {
 
 function PlatformGeneratorInit(me) {
     for (var i = 0, inc = me.interval, height = me.height; i < height; i += inc) {
-        me.platlast = ObjectMaker.make("Platform", {movement: movePlatformSpawn});
+        me.platlast = window.objectMaker.make("Platform", {movement: movePlatformSpawn});
         me.platlast.yvel *= me.dir;
         if (me.dir == 1) addThing(me.platlast, me.left, me.top + i * unitsize);
         else addThing(me.platlast, me.left, me.bottom - i * unitsize);
@@ -2514,14 +2517,9 @@ function endLevelFireworks(me, numfire, detector) {
     });
 }
 
-function explodeFirework(num, castlemid) {
-    setTimeout(function () {
-        log("Not placing fireball.");
-        // var fire = ObjectMaker.make("Firework");
-        // addThing(fire, castlemid + fire.locs[0] - unitsize * 6, unitsizet16 + fire.locs[1]);
-        // fire.animate();
-    }, timer * num * 42);
-}
+const explodeFirework = (num) => {
+    setTimeout(() => console.log("Not placing fireball."), timer * num * 42);
+};
 
 function Firework(me, num) {
     me.width = me.height = 8;

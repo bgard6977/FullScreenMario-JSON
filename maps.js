@@ -4,7 +4,7 @@
 
 function resetMapsManager() {
     window.mapsManager = new MapsManagr({
-        prething_maker: ObjectMaker,
+        prething_maker: window.objectMaker,
         recipient: window.map_settings || window,
         recipient_receives: [
             "gravity",

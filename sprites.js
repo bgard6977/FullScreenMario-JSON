@@ -2,7 +2,7 @@
 // Contains functions for finding, setting, and manipulating sprites
 
 // Resets the main canvas and context
-function resetCanvas() {
+const resetCanvas = () => { /* called by mario.js */
     // The global canvas is one that fills the screen
     window.canvas = getCanvas(innerWidth, innerHeight, true);
     // window.canvas = createElement(
@@ -15,8 +15,8 @@ function resetCanvas() {
     // }});
     // The context is saved for ease of access
     window.context = canvas.getContext("2d");
-    body.appendChild(canvas);
-}
+    document.body.appendChild(canvas);
+};
 
 /* Sprite Parsing */
 // These functions deal turning library.rawsprites strings into library.sprites Uint8ClampedArrays

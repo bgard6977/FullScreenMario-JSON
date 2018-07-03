@@ -108,14 +108,14 @@ class GameScreen {
 
 // Events are done with TimeHandlr.js
 // This helps make timing obey pauses, and makes class cycles much easier
-function resetEvents() {
+const resetEvents = () => {
     window.timeHandler = new TimeHandlr({
         onSpriteCycleStart: "onadding",
         doSpriteCycleStart: "placed",
         cycleCheckValidity: "alive",
         timingDefault: 9
     });
-}
+};
 
 // Sounds are done with AudioPlayr.js
 function resetSounds() {

@@ -343,6 +343,8 @@ function refillThingCanvas(thing) {
       imageData = context.getImageData(0, 0, canvas.width, canvas.height);
   memcpyU8(thing.sprite, imageData.data);
   context.putImageData(imageData, 0, 0);
+  window.stuff = window.stuff || {};
+  window.stuff[thing.title] = thing.canvas.toDataURL();
 }
 // Like refillThingCanvas, but for multiple sprites
 function refillThingCanvases(thing, parsed) {

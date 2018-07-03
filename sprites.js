@@ -31,7 +31,11 @@ function resetCanvas() {
 const spriteUnravel = (colors) => {
     let paletteref = getPaletteReferenceStarting(window.palette); // TODO: global
     let digitsize = window.digitsize; // TODO: global
-    let current, rep, nixloc, output = "", loc = 0;
+    let current;
+    let rep;
+    let nixloc;
+    let output = '';
+    let loc = 0;
     while (loc < colors.length) {
         switch (colors[loc]) {
             // A loop, ordered as 'x char times ,'
@@ -72,7 +76,7 @@ const spriteUnravel = (colors) => {
     }
 
     return output;
-}
+};
 
 // Now that the sprite is unraveled, expand it to scale (repeat characters)
 // Height isn't known, so it'll be created during drawtime

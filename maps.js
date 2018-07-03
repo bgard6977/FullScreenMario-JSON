@@ -113,7 +113,7 @@ function setMap(name) {
     };
 
     window.mapsManager.setMap(name);
-    StatsHolder.set("world", name.join('-'));
+    window.statsHolder.set("world", name.join('-'));
     startDataTime();
     window.inputWriter.restart();
     unpause();

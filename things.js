@@ -1326,7 +1326,7 @@ function hitCoin(me, coin) {
 }
 
 function gainCoin() {
-    StatsHolder.increase("coins", 1);
+    window.statsHolder.increase("coins", 1);
 }
 
 function coinEmerge(me, solid) {
@@ -1378,7 +1378,7 @@ function placePlayer(xloc, yloc) {
     window.player = window.objectMaker.make("Player", {
         gravity: map_settings.gravity,
         keys: new Keys(),
-        power: StatsHolder.get("power")
+        power: window.statsHolder.get("power")
     });
     toggleLuigi(true);
     setPlayerSizeSmall(player);
@@ -1389,9 +1389,9 @@ function placePlayer(xloc, yloc) {
     }
 
     var adder = addThing(player, xloc || unitsizet16, yloc || (map_settings.floor - player.height) * unitsize);
-    if (StatsHolder.get("power") >= 2) {
+    if (window.statsHolder.get("power") >= 2) {
         playerGetsBig(player, true);
-        if (StatsHolder.get("power") == 3)
+        if (window.statsHolder.get("power") == 3)
             playerGetsFire(player, true);
     }
     return adder;
@@ -1448,7 +1448,7 @@ function removeCrouch() {
 
 function playerShroom(me) {
     if (me.shrooming) return;
-    StatsHolder.increase("power");
+    window.statsHolder.increase("power");
     score(me, 1000, true);
     if (me.power == 3) {
         return;
@@ -1853,7 +1853,7 @@ function killPlayer(me, big) {
 
     // Clear and reset
     me.nocollide = me.nomove = nokeys = 1;
-    StatsHolder.decrease("lives");
+    window.statsHolder.decrease("lives");
 
     // If it's in editor, (almost) immediately set map
     if (window.editing) {
@@ -1861,9 +1861,9 @@ function killPlayer(me, big) {
             editorSubmitGameFuncPlay();
             editor.playing = editor.playediting = true;
         }, 35 * timer);
-    } else if (!map_settings.random || StatsHolder.get("lives") <= 0) {
+    } else if (!map_settings.random || window.statsHolder.get("lives") <= 0) {
         // If the map is normal, or failing that a game over is reached, timeout a reset
-        window.timeHandler.addEvent(StatsHolder.get("lives") ? setMap : gameOver, 280);
+        window.timeHandler.addEvent(window.statsHolder.get("lives") ? setMap : gameOver, 280);
     } else {
         // Otherwise it's random; spawn him again
         nokeys = notime = false;
@@ -1919,7 +1919,7 @@ function gameRestart() {
     window.timeHandler.addEvent(function () {
         body.style.visibility = "";
     });
-    StatsHolder.set("lives", 3);
+    window.statsHolder.set("lives", 3);
 }
 
 
@@ -2442,15 +2442,15 @@ function endLevelPoints(me, detector) {
     killNormal(me);
 
     // Determine the number of fireballs (1, 3, and 6 become not 0)
-    var numfire = parseInt(getLast(String(StatsHolder.get("time"))));
+    var numfire = parseInt(getLast(String(window.statsHolder.get("time"))));
     if (!(numfire == 1 || numfire == 3 || numfire == 6)) numfire = 0;
     // Count down the points (x50)
     var points = setInterval(function () {
         // 50 points for each unit of time
-        StatsHolder.decrease("time");
-        StatsHolder.increase("score", 50);
+        window.statsHolder.decrease("time");
+        window.statsHolder.increase("score", 50);
         // Once it's done, move on to the fireworks.
-        if (StatsHolder.get("time") <= 0) {
+        if (window.statsHolder.get("time") <= 0) {
             // pause();
             clearInterval(points);
             setTimeout(function () {

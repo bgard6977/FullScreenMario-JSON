@@ -28,18 +28,18 @@ function startGame(world11) {
     resetMeasurements();
     resetLibrary(); // library.js
     resetEvents();
-    resetCanvas();
-    resetThings();
-    resetScenery();
+    resetCanvas(); // sprites.js
+    resetThings(); // things.js
+    resetScenery(); // things.js
     resetMapsManager(); // maps.js
     window.mapsManager.mapStore([1, 1], world11);
 
     resetStatsHolder(); // data.js
     resetInputWriter(); // triggers.js
-    resetTriggers();
+    resetTriggers(); // triggers.js
 
     // With that all set, set the map to World11.
-    StatsHolder.set("lives", 3);
+    window.statsHolder.set("lives", 3);
     setMap([1, 1]);
 
     log("It took " + (Date.now() - time_start) + " milliseconds to start.");

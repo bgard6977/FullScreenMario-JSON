@@ -1,4 +1,9 @@
-/* mario.js */
+/*
+mario.js
++-+ library.js
+  |
+  +- sprites.js
+*/
 
 // Starts everything.
 

@@ -1,4 +1,8 @@
-/* library.js */
+/*
+library.js
+|
++- sprites.js - spireUnravel(), spriteExpand(), getSpriteArray()
+*/
 
 // Loads the library of raw data, then parses it
 
@@ -776,27 +780,27 @@ function resetLibrary() {
 }
 
 // Given an object in the library, parse it into sprite data
-const libraryParse = (setref) => {
+const libraryParse = (spriteMap) => {
     const setnew = {};
-    for (let i in setref) {
-        const objref = setref[i];
+    for (let spriteName in spriteMap) {
+        const objref = spriteMap[spriteName];
         switch (objref.constructor) {
             // If it's a string, parse it (unless it's a normal setter)
             case String:
-                setnew[i] = spriteGetArray(spriteExpand(spriteUnravel(objref)));
+                setnew[spriteName] = spriteGetArray(spriteExpand(spriteUnravel(objref)));
                 break;
             // If it's an array, it should have a command such as 'same' to be post-processed
             case Array:
-                library.posts.push({caller: setnew, name: i, command: setref[i]});
+                library.posts.push({caller: setnew, name: spriteName, command: spriteMap[spriteName]});
                 break;
             // If it's an object, recurse
             case Object:
-                setnew[i] = libraryParse(objref);
+                setnew[spriteName] = libraryParse(objref);
                 break;
         }
     }
     return setnew;
-}
+};
 
 // Evaulates the post commands (e.g. 'same', 'filter')
 function libraryPosts() {

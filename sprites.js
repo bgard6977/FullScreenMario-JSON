@@ -570,16 +570,6 @@ function drawPatternOnCanvas(context, source, leftc, topc, unitwidth, unitheight
     context.translate(-leftc, -topc);
 }
 
-// Forces each thing to redraw itself
-function clearAllSprites(clearcache) {
-    var arrs = [window.solids, window.characters, window.scenery],
-        arr, i;
-    for (arr in arrs)
-        for (i in (arr = arrs[arr]))
-            setThingSprite(arr[i]);
-    if (clearcache) library.cache = {};
-}
-
 // http://www.html5rocks.com/en/tutorials/webgl/typed_arrays/
 // http://www.javascripture.com/Uint8ClampedArray
 // function memcpyU8(source, destination, readloc, writeloc, length) {
@@ -605,13 +595,4 @@ function memcpyU8(source, destination, readloc, writeloc, writelength/*, thing*/
     while (lwritelength--)
         // while(--lwritelength)
         destination[lwriteloc++] = source[lreadloc++];
-}
-
-// Somewhat cross-platform way to make a canvas' 2d context not smooth pixels
-function canvasDisableSmoothing(canvas, context) {
-    context = context || canvas.getContext("2d");
-
-    context.webkitImageSmoothingEnabled = false;
-    context.mozImageSmoothingEnabled = false;
-    context.imageSmoothingEnabled = false;
 }

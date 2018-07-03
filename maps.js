@@ -323,8 +323,6 @@ function intoPipeHorizontal(me, pipe) {
 }
 
 function pipePreparations(me) {
-    AudioPlayer.pauseTheme();
-    AudioPlayer.play("Pipe");
     locMovePreparations(me);
     me.nofall = me.nocollide = nokeys = notime = true;
     me.movement = me.xvel = me.yvel = 0;
@@ -333,7 +331,6 @@ function pipePreparations(me) {
 function exitPipeVertical(pipe) {
     switchContainers(player, characters, scenery);
     player.nofall = nokeys = notime = true;
-    AudioPlayer.play("Pipe");
     setTop(player, pipe.top);
     setMidXObj(player, pipe, true);
     var dy = unitsize / -4, move = setInterval(function () {
@@ -355,7 +352,6 @@ function walkToPipe() {
         move = window.timeHandler.addEventInterval(function () {
             if (player.piping) {
                 // We have started piping
-                AudioPlayer.pauseTheme();
                 // nokeys = player.keys.run = notime = false;
                 clearInterval(move);
                 player.maxspeed = player.maxspeedsave;

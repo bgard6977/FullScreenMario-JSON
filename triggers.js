@@ -141,8 +141,6 @@ function resetInputWriter() {
     if(player.canjump &&/* !player.crouching &&*/ (player.resting || map_settings.underwater)) {
       keys.jump = 1;
       player.canjump = keys.jumplev = 0;
-      // To do: can player make a jumping sound during the spring, and during the pipe cutscenes?
-      AudioPlayer.play(player.power > 1 ? "Jump Super" : "Jump Small");
       if(map_settings.underwater) setTimeout(function() {
         player.jumping = keys.jump = false;
       }, timer * 14);
@@ -163,8 +161,7 @@ function resetInputWriter() {
     if(!window.paused) addEvent(pause, 1, true);
   }
   
-  function KeyDownMute(keys) {
-    AudioPlayer.toggleMute();
+  function KeyDownMute() {
   }
   
   function KeyDownL(keys) {

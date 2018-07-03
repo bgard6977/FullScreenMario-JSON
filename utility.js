@@ -600,7 +600,6 @@ function scoreEnemyStar(enemy) {
             break;
     }
     scoreEnemyFin(enemy, amount);
-    AudioPlayer.play("Kick");
 }
 
 function scoreEnemyBelow(enemy) {
@@ -909,7 +908,6 @@ function blockBumpMovement(me) {
 }
 
 function emergeUp(me, solid) {
-    AudioPlayer.play("Powerup Appears");
     flipHoriz(me);
     me.nomove = me.nocollide = me.alive = me.nofall = me.emerging = true;
     switchContainers(me, characters, scenery);

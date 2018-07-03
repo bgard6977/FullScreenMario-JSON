@@ -647,11 +647,7 @@ function fireEnemy(enemy, me) {
         return;
     }
 
-    if (enemy.solid) {
-        AudioPlayer.playLocal("Bump", me.right);
-    }
-    else {
-        AudioPlayer.playLocal("Kick", me.right);
+    if (!enemy.solid) {
         enemy.death(enemy, 2);
         scoreEnemyFire(enemy);
     }
@@ -726,7 +722,6 @@ function hitShell(one, two) {
         } // Otherwise just kill it normally
         else killFlip(one);
 
-        AudioPlayer.play("Kick");
         score(one, findScore(two.enemyhitcount), true);
         ++two.enemyhitcount;
     }
@@ -737,12 +732,10 @@ function hitShell(one, two) {
 // Hitting a wall
 function hitShellSolid(one, two) {
     if (two.right < one.right) {
-        AudioPlayer.playLocal("Bump", one.left);
         setRight(two, one.left);
         two.xvel = -two.speed;
         two.moveleft = true;
     } else {
-        AudioPlayer.playLocal("Bump", one.right);
         setLeft(two, one.right);
         two.xvel = two.speed;
         two.moveleft = false;
@@ -814,7 +807,6 @@ function hitShellPlayer(one, two) {
 
         // Player is landing on the shell (movements, xvels already set)
         if (playerjump) {
-            AudioPlayer.play("Kick");
             // The shell is moving
             if (!two.xvel) {
                 jumpEnemy(one, two);
@@ -878,7 +870,6 @@ function jumpEnemy(me, enemy) {
     if (me.keys.up) me.yvel = unitsize * -1.4;
     else me.yvel = unitsize * -.7;
     me.xvel *= .91;
-    AudioPlayer.play("Kick");
     if (enemy.group != "item" || enemy.type == "shell")
         score(enemy, findScore(me.jumpcount++ + me.jumpers), true);
     ++me.jumpers;
@@ -1129,7 +1120,6 @@ function moveCannonInit(me) {
                 flipHoriz(spawn);
             }
             else addThing(spawn, me.left + me.width, me.top);
-            AudioPlayer.playLocal("Bump", me.right);
         }, 270, Infinity, me);
     me.movement = false;
 }
@@ -1327,8 +1317,9 @@ function coinBecomesSolid(me) {
 }
 
 function hitCoin(me, coin) {
-    if (!me.player) return;
-    AudioPlayer.play("Coin");
+    if (!me.player) {
+        return;
+    }
     score(me, 200, false);
     gainCoin();
     killNormal(coin);
@@ -1339,7 +1330,6 @@ function gainCoin() {
 }
 
 function coinEmerge(me, solid) {
-    AudioPlayer.play("Coin");
     removeClass(me, "still");
     switchContainers(me, characters, scenery);
     score(me, 200, false);
@@ -1458,10 +1448,11 @@ function removeCrouch() {
 
 function playerShroom(me) {
     if (me.shrooming) return;
-    AudioPlayer.play("Powerup");
     StatsHolder.increase("power");
     score(me, 1000, true);
-    if (me.power == 3) return;
+    if (me.power == 3) {
+        return;
+    }
     me.shrooming = true;
     (++me.power == 3 ? playerGetsFire : playerGetsBig)(me);
 }
@@ -1801,27 +1792,25 @@ function playerFires() {
     }, 7, player);
 }
 
-function emergeFire(me) {
-    AudioPlayer.play("Fireball");
+function emergeFire() {
 }
 
 function playerStar(me) {
     if (me.star) return;
     ++me.star;
-    AudioPlayer.play("Powerup");
-    AudioPlayer.playTheme("Star", true);
     window.timeHandler.addEvent(playerRemoveStar, 560, me);
     switchClass(me, "normal", "star");
     window.timeHandler.addSpriteCycle(me, ["star1", "star2", "star3", "star4"], "star", 5);
 }
 
 function playerRemoveStar(me) {
-    if (!me.star) return;
+    if (!me.star) {
+        return;
+    }
     --me.star;
     removeClasses(me, "star star1 star2 star3 star4");
     window.timeHandler.clearClassCycle(me, "star");
     addClass(me, "normal");
-    AudioPlayer.playTheme();
 }
 
 // Big means it must happen: 2 means no animation
@@ -1836,7 +1825,6 @@ function killPlayer(me, big) {
     else {
         // If Player can survive this, just power down
         if (!big && me.power > 1) {
-            AudioPlayer.play("Power Down");
             me.power = 1;
             return playerGetsSmall(me);
         }
@@ -1864,8 +1852,6 @@ function killPlayer(me, big) {
     }
 
     // Clear and reset
-    AudioPlayer.pause();
-    if (!window.editing) AudioPlayer.play("Player Dies");
     me.nocollide = me.nomove = nokeys = 1;
     StatsHolder.decrease("lives");
 
@@ -1875,19 +1861,13 @@ function killPlayer(me, big) {
             editorSubmitGameFuncPlay();
             editor.playing = editor.playediting = true;
         }, 35 * timer);
-    }
-    // If the map is normal, or failing that a game over is reached, timeout a reset
-    else if (!map_settings.random || StatsHolder.get("lives") <= 0) {
+    } else if (!map_settings.random || StatsHolder.get("lives") <= 0) {
+        // If the map is normal, or failing that a game over is reached, timeout a reset
         window.timeHandler.addEvent(StatsHolder.get("lives") ? setMap : gameOver, 280);
-    }
-    // Otherwise it's random; spawn him again
-    else {
+    } else {
+        // Otherwise it's random; spawn him again
         nokeys = notime = false;
-        window.timeHandler.addEvent(function () {
-            playerDropsIn();
-            AudioPlayer.playTheme();
-            // }, 7 * (map.respawndist || 17));
-        }, 117);
+        window.timeHandler.addEvent(() => playerDropsIn(), 117);
     }
 }
 
@@ -1915,8 +1895,6 @@ function gameOver() {
     // Having a gamecount of -1 truly means it's all over
     gameon = false;
     pause();
-    AudioPlayer.pauseTheme();
-    AudioPlayer.play("Game Over");
 
     var innerHTML = "<div style='font-size:49px;padding-top: " + (innerHeight / 2 - 28/*49*/) + "px'>GAME OVER</div>";
     // innerHTML += "<p style='font-size:14px;opacity:.49;width:490px;margin:auto;margin-top:49px;'>";
@@ -1983,9 +1961,12 @@ function Brick(me, content) {
 }
 
 function brickBump(me, character) {
-    if (me.up || !character.player) return;
-    AudioPlayer.play("Bump");
-    if (me.used) return;
+    if (me.up || !character.player) {
+        return;
+    }
+    if (me.used) {
+        return;
+    }
     me.up = character;
     if (character.power > 1 && !me.contents) {
         // wait until after collision testing to delete (for coins)
@@ -2027,7 +2008,6 @@ function makeUsedBlock(me) {
 }
 
 function brickBreak(me, character) {
-    AudioPlayer.play("Break Block");
     score(me, 50);
     me.up = character;
     window.timeHandler.addEvent(placeShards, 1, me);
@@ -2059,7 +2039,6 @@ function attachEmerge(me, solid) {
 function blockBump(me, character) {
     if (!character.player) return;
     if (me.used) {
-        AudioPlayer.play("Bump");
         return;
     }
     me.used = 1;
@@ -2088,7 +2067,6 @@ function checkContentsMushroom(me) {
 }
 
 function vineEmerge(me, solid) {
-    AudioPlayer.play("Vine Emerging");
     setHeight(me, 0);
     me.movement = vineMovement;
     window.timeHandler.addEvent(vineEnable, 14, me);
@@ -2285,8 +2263,6 @@ function CastleAxeFalls(me, collider) {
     killOtherCharacters();
     window.timeHandler.addEvent(killNormal, 7, axe.chain);
     window.timeHandler.addEvent(CastleAxeKillsBridge, 14, axe.bridge, axe);
-    AudioPlayer.pauseTheme();
-    AudioPlayer.playTheme("World Clear", false, false);
 }
 
 // Step 2 of getting to that jerkface Toad
@@ -2376,9 +2352,6 @@ function detachPlayer(me) {
 }
 
 function FlagCollisionTop(me, detector) {
-    AudioPlayer.pause();
-    AudioPlayer.play("Flagpole");
-
     // All other characters die, and the player is no longer in control
     killOtherCharacters();
     nokeys = notime = true;
@@ -2457,10 +2430,7 @@ function FlagOff(me, solid) {
     me.maxspeed = me.walkspeed;
 
     // The walking happens a little bit later as well
-    window.timeHandler.addEvent(function () {
-        AudioPlayer.play("Stage Clear");
-        playerHopsOff(me, true);
-    }, 14, me);
+    window.timeHandler.addEvent(() => playerHopsOff(me, true), 14, me);
 }
 
 // Me === Player
@@ -2479,8 +2449,6 @@ function endLevelPoints(me, detector) {
         // 50 points for each unit of time
         StatsHolder.decrease("time");
         StatsHolder.increase("score", 50);
-        // Each point(x50) plays the coin noise
-        AudioPlayer.play("Coin");
         // Once it's done, move on to the fireworks.
         if (StatsHolder.get("time") <= 0) {
             // pause();
@@ -2510,11 +2478,6 @@ function endLevelFireworks(me, numfire, detector) {
             endLevel();
         }, nextnum);
     };
-
-    // If the Stage Clear sound is still playing, wait for it to finish
-    AudioPlayer.addEventImmediate("Stage Clear", "ended", function () {
-        window.timeHandler.addEvent(nextfunc, 35);
-    });
 }
 
 const explodeFirework = (num) => {
@@ -2550,7 +2513,6 @@ function Firework(me, num) {
     // Otherwise, it's just a normal explosion
     me.animate = function () {
         var name = me.className + " n";
-        if (me.locs) AudioPlayer.play("Firework");
         window.timeHandler.addEvent(function (me) {
             setClass(me, name + 1);
         }, 0, me);
@@ -2698,16 +2660,18 @@ function resetScenery() {
 }
 
 // Sets the width of them and removes the blank element
-function processSceneryPatterns(patterns) {
-    var current, i;
-    for (i in patterns) {
+const processSceneryPatterns = (patterns) => {
+    let current;
+    for (let i in patterns) {
         current = patterns[i];
-        if (!current.length) continue;
+        if (!current.length) {
+            continue;
+        }
         // The last array in current should be ["blank", width]
         current.width = current[current.length - 1][1];
         current.pop();
     }
-}
+};
 
 function collideLocationShifter(me, shifter) {
     if (!me.player) return;

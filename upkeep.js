@@ -48,24 +48,22 @@ function adjustFPS() {
     window.time_prev = time_now;
 }
 
-function pause(big) {
-    if (paused && !window.nextupk) return;
+function pause() {
+    if (paused && !window.nextupk) {
+        return;
+    }
     cancelAnimationFrame(nextupk);
-    AudioPlayer.pause();
     paused = true;
-    if (big) AudioPlayer.play("Pause");
 }
 
 function unpause() {
     if (!paused) return;
     window.nextupk = requestAnimationFrame(upkeep);
     paused = false;
-    AudioPlayer.resume();
 }
 
-
 // Solids by themselves don't really do much
-function maintainSolids(update) {
+function maintainSolids() {
     for (var i = 0, solid; i < solids.length; ++i) {
         solid = solids[i];
         if (solid.alive) {

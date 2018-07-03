@@ -35,7 +35,7 @@ function startGame(world11) {
     window.mapsManager.mapStore([1, 1], world11);
 
     resetStatsHolder(); // data.js
-    resetInputWriter();
+    resetInputWriter(); // triggers.js
     resetTriggers();
 
     // With that all set, set the map to World11.

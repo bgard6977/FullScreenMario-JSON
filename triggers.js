@@ -5,8 +5,8 @@
 function resetTriggers() {
   // Gamepad.js support for joysticks and controllers
   window.gamepad = new Gamepad();
-  gamepad.bind(Gamepad.Event.BUTTON_DOWN, InputWriter.pipe("onkeydown", "keyCode"));
-  gamepad.bind(Gamepad.Event.BUTTON_UP, InputWriter.pipe("onkeyup", "keyCode"));
+  gamepad.bind(Gamepad.Event.BUTTON_DOWN, window.inputWriter.pipe("onkeydown", "keyCode"));
+  gamepad.bind(Gamepad.Event.BUTTON_UP, window.inputWriter.pipe("onkeyup", "keyCode"));
   gamepad.bind(Gamepad.Event.AXIS_CHANGED, function(event) {
     var value = event.value,
         value_abs = abs(value);
@@ -49,10 +49,10 @@ function resetTriggers() {
 
   // Set the key events on the body
   proliferate(body, {
-    "onkeydown": InputWriter.pipe("onkeydown", "keyCode"),
-    "onkeyup": InputWriter.pipe("onkeyup", "keyCode"),
-    "onmousedown": InputWriter.pipe("onmousedown", "which"),
-    "oncontextmenu": InputWriter.pipe("oncontextmenu", null, true)
+    "onkeydown": window.inputWriter.pipe("onkeydown", "keyCode"),
+    "onkeyup": window.inputWriter.pipe("onkeyup", "keyCode"),
+    "onmousedown": window.inputWriter.pipe("onmousedown", "which"),
+    "oncontextmenu": window.inputWriter.pipe("oncontextmenu", null, true)
   });
   
   // Set UI triggers
@@ -213,7 +213,7 @@ function resetInputWriter() {
   }
   
   
-  window.InputWriter = new InputWritr({
+  window.inputWriter = new InputWritr({
     "aliases": {
       // Keyboard aliases
       "left":   [37, 65,      "AXIS_LEFT", "DPAD_LEFT"],                     // a,     left

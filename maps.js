@@ -115,7 +115,7 @@ function setMap(name) {
     window.mapsManager.setMap(name);
     StatsHolder.set("world", name.join('-'));
     startDataTime();
-    InputWriter.restart();
+    window.inputWriter.restart();
     unpause();
 }
 

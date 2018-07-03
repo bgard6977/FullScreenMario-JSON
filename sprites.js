@@ -28,13 +28,11 @@ function resetCanvas() {
 // Given a compressed raw sprite data string, this 'unravels' it (uncompresses)
 // This is the first function called on strings in libraryParse
 // This could output the Uint8ClampedArray immediately if given the area - deliberately does not, for ease of storage
-function spriteUnravel(colors) {
-    var paletteref = getPaletteReferenceStarting(window.palette),
-        digitsize = window.digitsize,
-        clength = colors.length,
-        current, rep, nixloc, newp, i, len,
-        output = "", loc = 0;
-    while (loc < clength) {
+const spriteUnravel = (colors) => {
+    let paletteref = getPaletteReferenceStarting(window.palette); // TODO: global
+    let digitsize = window.digitsize; // TODO: global
+    let current, rep, nixloc, output = "", loc = 0;
+    while (loc < colors.length) {
         switch (colors[loc]) {
             // A loop, ordered as 'x char times ,'
             case 'x':

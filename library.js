@@ -37,7 +37,7 @@ function resetLibrary() {
     window.digitsize = getDigitSize(palette); // TODO: global
 
     // Commonly used filters (placed in the library after parsing)
-    window.filters = { // TODO: global
+    const filters = { // TODO: global
         Underworld: ["palette", {"05": "18", "09": "16"}],
         Castle: ["palette", {"02": "04", "05": "01", "09": "03"}],
         Alt: ["palette", {"11": "01"}],
@@ -771,7 +771,6 @@ function resetLibrary() {
         posts: []
     };
     library.filters = filters;
-    delete window.filters;
     library.sprites = libraryParse(library.rawsprites);
     libraryPosts();
 }
@@ -904,6 +903,9 @@ function SpriteMultiple(type) {
     this.multiple = true;
 }
 
-function getDigitSize(palette) {
-    return Number(String(palette.length).length);
-}
+const getDigitSize = (palette) => {
+    const len = palette.length;
+    const str = String(len);
+    const num = Number(str.length);
+    return num;
+};

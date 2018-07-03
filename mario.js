@@ -22,7 +22,7 @@ function startGame(world11) {
     window.bodystyle = body.style; // TODO: remove global
 
     // Know when to shut up
-    window.verbosity = {Maps: false, Sounds: false}; // TODO: remove global
+    window.verbosity = {Maps: false}; // TODO: remove global
 
     // Resetting everything may take a while
     resetMeasurements();
@@ -34,10 +34,9 @@ function startGame(world11) {
     resetMapsManager(); // maps.js
     window.mapsManager.mapStore([1, 1], world11);
 
-    resetStatsHolder();
+    resetStatsHolder(); // data.js
     resetInputWriter();
     resetTriggers();
-    resetSounds();
 
     // With that all set, set the map to World11.
     StatsHolder.set("lives", 3);
@@ -122,13 +121,6 @@ const resetEvents = () => {
         timingDefault: 9
     });
 };
-
-// Sounds are done with AudioPlayr.js
-function resetSounds() {
-    window.sounds = {};
-    window.theme = false;
-    window.muted = (localStorage && localStorage.muted == "true");
-}
 
 // Quadrants are done with QuadsKeepr.js
 // This starts off with 7 cols and 6 rows (each has 1 on each side for padding)

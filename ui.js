@@ -26,9 +26,6 @@ function start() {
   
   // Options
   setOptions();
-  
-  // Make lots of friends
-  setCheats();
 }
 
 function setLocalStatus() {
@@ -165,40 +162,4 @@ function toggleGame(me) {
     type: "toggleOption",
     option: me
   }, "*");
-}
-
-function setCheats() {
-  var i;
-  console.log("Hi, thanks for playing Full Screen Mario! I see you're using the console.");
-  console.log("There's not really any way to stop you from messing around so if you'd like to know the common cheats, enter \"displayCheats()\" here.");
-  console.log("If you'd like, go ahead and look around the source code. There are a few surprises you might have fun with... ;)");
-  console.log("http://www.github.com/DiogenesTheCynic/FullScreenMario");
-  window.cheats = {
-    Change_Map: "game.setMap([#,#]);",
-    Change_Map_Location: "game.MapsManager.setLocation(#);",
-    Fast_Forward: "game.fastforward(amount; 1 by default);",
-    Life: "game.gainLife(# amount or Infinity)",
-    Low_Gravity: "game.player.gravity = game.gravity /= 2;",
-    Lulz: "game.lulz();",
-    Random_Map: "game.setMapRandom();",
-    Shroom: "game.playerShroom(game.player)",
-    Star_Power: "game.playerStar(game.player)",
-    Unlimited_Time: "game.StatsHolder.set(\"time\", Infinity);";
-  }
-  cheatsize = 0;
-  for(var i in cheats)
-    cheatsize = Math.max(cheatsize, i.length);
-}
-
-function displayCheats() {
-  console.log("These are stored in the global 'cheats' object, by the way.");
-  for(i in cheats)
-    printCheat(i, cheats[i]);
-  return "Have fun!";
-}
-
-function printCheat(name, text) {
-  for (i = cheatsize - name.length; i > 0; --i)
-    name += ".";
-  console.log(name.replace("_", " ") + "...... " + text);
 }

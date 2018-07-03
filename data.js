@@ -121,7 +121,9 @@ function findScore(lev) {
   gainLife();
 }
 
-function gainLife(num, nosound) {
-  if(typeof(num) != "number") num = 1;
+function gainLife(num) {
+  if(typeof(num) != "number") {
+      num = 1;
+  }
   StatsHolder.increase("lives", num);
 }

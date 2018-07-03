@@ -55,8 +55,6 @@ function randBoolJS() {
  * Basic object positioning helper functions
  */
 function updatePosition(me) {
-    // if(!me.nomove) shiftHoriz(me, me.xvel * realtime);
-    // if(!me.nofall) shiftVert(me, me.yvel * realtime);
     if (!me.nomove) shiftHoriz(me, me.xvel);
     if (!me.nofall) shiftVert(me, me.yvel);
 }

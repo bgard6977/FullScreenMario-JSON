@@ -1,8 +1,10 @@
 /* Upkeep.js */
 
 // Contains functions associated with the upkeep
-function upkeep() {
-    if (window.paused) return;
+const upkeep = () => {
+    if (window.paused) {
+        return;
+    }
     window.nextupk = setTimeout(upkeep, window.timer);
 
     // See utility.js::fastforward
@@ -16,7 +18,7 @@ function upkeep() {
     }
     window.timeHandler.handleEvents(); // Events upkeep
     refillCanvas();
-}
+};
 
 const adjustFPS = () => {
     window.time_now = window.now();
@@ -54,18 +56,21 @@ const maintainSolids = () => {
             deleteThing(solid, window.solids, i);
         }
     }
-}
+};
 
-function maintainCharacters() {
-    var delx = window.gamescreen.right + window.quadsKeeper.getOutDifference(),
-        character, i;
-    for (i = 0; i < characters.length; ++i) {
-        character = characters[i];
+const maintainCharacters = () => {
+    let delx = window.gamescreen.right + window.quadsKeeper.getOutDifference();
+    for (let i = 0; i < window.characters.length; ++i) {
+        const character = window.characters[i];
         // Gravity
         if (!character.resting) {
-            if (!character.nofall) character.yvel += character.gravity || map_settings.gravity;
+            if (!character.nofall) {
+                character.yvel += character.gravity || map_settings.gravity;
+            }
             character.yvel = min(character.yvel, map_settings.maxyvel);
-        } else character.yvel = 0;
+        } else {
+            character.yvel = 0;
+        }
 
         // Position updating and collision detection
         updatePosition(character);
@@ -78,7 +83,6 @@ function maintainCharacters() {
             if (!characterOnResting(character, character.resting)) {
                 character.resting = false; // Necessary for moving platforms :(
             } else {
-                /*character.jumping = */
                 character.yvel = false;
                 setBottom(character, character.resting.top);
             }
@@ -89,19 +93,18 @@ function maintainCharacters() {
         //// Good for performance if gamescreen.bottom - gamescreen.top is saved in screen and updated on shift
         // To do: is map.shifting needed?
         if (character.alive) {
-            if (!character.player &&
-                (character.numquads == 0 || character.left > delx) && !character.outerok) {
-                // (character.top > gamescreen.bottom - gamescreen.top || character.left < + quads.width * -1)) {
+            if (!character.player && (character.numquads == 0 || character.left > delx) && !character.outerok) {
                 deleteThing(character, characters, i);
-            }
-            else {
-                if (!character.nomove && character.movement)
+            } else {
+                if (!character.nomove && character.movement) {
                     character.movement(character);
+                }
             }
+        } else {
+            deleteThing(character, characters, i);
         }
-        else deleteThing(character, characters, i);
     }
-}
+};
 
 function maintainPlayer() {
     if (!player.alive) {

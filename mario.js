@@ -17,7 +17,7 @@ function FullScreenMario() {
 
     // Resetting everything may take a while
     resetMeasurements();
-    resetLibrary();
+    resetLibrary(); // library.js
     resetEvents();
     resetCanvas();
     resetThings();

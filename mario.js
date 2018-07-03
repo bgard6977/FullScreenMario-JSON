@@ -42,7 +42,7 @@ function startGame(world11) {
     window.statsHolder.set("lives", 3);
     setMap([1, 1]);
 
-    log("It took " + (Date.now() - time_start) + " milliseconds to start.");
+    console.log("It took " + (Date.now() - time_start) + " milliseconds to start.");
 }
 
 /* Basic reset operations */
@@ -196,11 +196,4 @@ function scrollPlayer(x, y, see) {
     setLeft(player, saveleft, see);
     setTop(player, savetop + y * unitsize, see);
     QuadsKeeper.updateQuadrants();
-}
-
-// Calls log if window.verbosity has the type enabled
-function mlog(type) {
-    if (verbosity[type]) {
-        log.apply(console, arguments);
-    }
 }

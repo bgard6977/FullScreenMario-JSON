@@ -359,11 +359,11 @@ function MapsManagr(settings) {
     */
 
     function exampleMacro(reference, prethings, area, map) {
-        log("This is an example of a macro that may be called by a map creation. \nThe arguments are");
-        log("Reference (the listing from area.creation):  ", reference);
-        log("Prethings (the area's listing of prethings): ", prethings);
-        log("Area      (the currently generated area):    ", area);
-        log("Map       (the map containing the area):     ", map);
+        console.log("This is an example of a macro that may be called by a map creation. \nThe arguments are");
+        console.log("Reference (the listing from area.creation):  ", reference);
+        console.log("Prethings (the area's listing of prethings): ", prethings);
+        console.log("Area      (the currently generated area):    ", area);
+        console.log("Map       (the map containing the area):     ", map);
     }
 
     // Private: macroFillPreThings({...})

@@ -102,7 +102,6 @@ const spriteGetArray = (colors) => {
     const split = colors.match(new RegExp('.{1,' + digitsize + '}', 'g'));
     const output = new Uint8ClampedArray(numColors * 4);
 
-    // console.log("spriteGetArray",colors);
     // For each color,
     for (let i = 0, j = 0; i < numColors; ++i) {
         // Grab its RGBA ints
@@ -139,7 +138,7 @@ function setThingSprite(thing) {
     // If one isn't found, search for it manually
     sprite = getSpriteFromLibrary(thing);
     if (!sprite) {
-        log("Could not get sprite from library on " + thing.title);
+        console.log("Could not get sprite from library on " + thing.title);
         return;
     }
     if (sprite.multiple) {
@@ -580,9 +579,6 @@ function drawPatternOnCanvas(context, source, leftc, topc, unitwidth, unitheight
 function memcpyU8(source, destination, readloc, writeloc, writelength/*, thing*/) {
     if (!source || !destination || readloc < 0 || writeloc < 0 || writelength <= 0) return;
     if (readloc >= source.length || writeloc >= destination.length) {
-        // console.log("Alert: memcpyU8 requested out of bounds!");
-        // console.log("source, destination, readloc, writeloc, writelength, thing");
-        // console.log(arguments);
         return;
     }
     if (readloc == null) readloc = 0;

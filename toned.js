@@ -6,14 +6,6 @@ function TonedJS(give_window) {
   var toned = {
     /* Object Shenanigans */
     
-    // Blindly hand all members of the donor variable to the recipient
-    // Ex: give(toned, window);
-    giveSup: function(donor, recipient) {
-      recipient = recipient || {};
-      for(var i in donor)
-        recipient[i] = donor[i];
-      return recipient;
-    },
     // Like giveSup/erior, but it doesn't override pre-existing members
     giveSub: function(donor, recipient) {
       recipient = recipient || {};
@@ -40,11 +32,6 @@ function TonedJS(give_window) {
         else recipient[i] = setting;
       }
       return recipient;
-    },
-    
-    // Blindly grabs the first key or value of the object, depending on grabkey
-    getFirst: function(obj, grabkey) {
-      for(var i in obj) return grabkey ? i : obj[i];
     },
     
     // Blindly grabs the last key or value of the object, depending on grabkey
@@ -89,18 +76,6 @@ function TonedJS(give_window) {
     classRemove: function(me, strout) { me.className = me.className.replace(new RegExp(" " + strout, "gm"), ""); },
     
     // Position changing
-    elementSetPosition: function(me, left, top) {
-      if(left == undefined) left = me.left;
-      if(top == undefined) top = me.top;
-      proliferate(me, {
-        left: left,
-        top: top,
-        style: {
-          marginLeft: left + "px",
-          marginTop: top + "px"
-        }
-      });
-    },
     elementShiftLeft: function(me, left) {
       if(!me.left) me.left = Number(me.style.marginLeft.replace("px", ""));
       me.style.marginLeft = round(me.left += left) + "px";
@@ -117,13 +92,6 @@ function TonedJS(give_window) {
       if(container.contains(child)) container.removeChild(child);
     },
     
-    // Attempts to find the soonest parent with this tag
-    findParentOfType: function(child, type) {
-      var parent = child.parentElement;
-      if(!parent || parent.nodeName == type) return parent;
-      return findParentType(parent, type);
-    },
-    
     // Clears all timer events from setTimeout and setInterval
     clearAllTimeouts: function() {
       var id = setTimeout(function() {});
@@ -137,10 +105,6 @@ function TonedJS(give_window) {
     
     /* String manipulations */
     
-    // Removes leading and trailing whitespace (thanks, IE<=8)
-    stringTrim: function(me) {
-      return me.replace(/^\s+|\s+$/g,''); 
-    },
     // Similar to arrayOf
     stringOf: function(me, n) {
       return (n == 0) ? '' : new Array(1 + (n || 1)).join(me);
@@ -149,16 +113,7 @@ function TonedJS(give_window) {
     stringHas: function(haystack, needle) {
       return haystack.indexOf(needle) != -1;
     },
-    // Case insensitive version of stringHas
-    stringHasI: function(haystack, needle) {
-      return haystack.toLowerCase().indexOf(needle.toLowerCase()) != -1;
-    },
-    // Capitalizes only the first 1 or n charactacters of a string
-    capitalizeFirst: function(str, n) {
-      n = n || 1;
-      return str.substr(0,n).toUpperCase() + str.substr(n).toLowerCase();
-    },
-    
+
     /* Array manipulations */
     
     // It's nice to have X-dimensional arrays
@@ -175,24 +130,9 @@ function TonedJS(give_window) {
       }
       return me;
     },
-    // Similar to stringOf
-    arrayOf: function(me, n) {
-      n = n || 1;
-      var arr = new Array(n);
-      while(n--) arr[n] = me;
-      return arr;
-    },
     // Looking at you, function arguments
     arrayMake: function(me) {
       return Array.prototype.slice.call(me);
-    },
-    // (7,10) = [7,8,9,10]
-    arrayRange: function(a, b) {
-      var len = 1 + b - a,
-          arr = new Array(len),
-          val = a, i = 0;
-      while(i < len) arr[i++] = val++;
-      return arr;
     },
     arrayShuffle: function(arr, start, end) {
       start = start || 0;
@@ -205,25 +145,7 @@ function TonedJS(give_window) {
       }
       return arr;
     },
-    // O(n^2) removal 
-    removeDuplicates: function(arr) {
-      var output = [],
-          me, hasdup,
-          len, i, j;
-      for(i = 0, len = arr.length; i < len; ++i) {
-        me = arr[i];
-        hasdup = false;
-        for(j = 0; j < i; ++j) {
-          if(arr[j] == me) {
-            hasdup = true;
-            break;
-          }
-        }
-        if(!hasdup) output.push(me);
-      }
-      return output;
-    },
-    
+
     /* Number manipulations */
     
     // Converts ('7',3,1) to '117'
@@ -233,7 +155,6 @@ function TonedJS(give_window) {
     },
     roundDigit: function(n, d) { return Number(d ? ~~(0.5 + (n / d)) * d : round(n)); },
     // It's often faster to store references to common Math functions
-    sign: function(n) { return n ? n < 0 ? -1 : 1 : 0; },
     round: function(n) { return ~~(0.5 + n); },
     max: Math.max,
     min: Math.min,
@@ -248,9 +169,6 @@ function TonedJS(give_window) {
     signBool: function(n) { return n > 0 ? true : false; },
     
     /* Etcetera */
-    
-    // It's nice being able log without going through console.. hopefully it gets optimized!
-    log: console.log.bind(console),
     
     // Timing
     now: Date.now

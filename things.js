@@ -1261,7 +1261,6 @@ function moveLakitu(me) {
         me.counter += .007;
         slideToXLoc(me, player.left + player.xvel + Math.sin(Math.PI * me.counter) * 117, player.maxspeed * .7);
     }
-    // log("moveLakitu after: " + (me.right - me.left) + "\n");
 }
 
 function throwSpiny(me) {
@@ -1928,7 +1927,6 @@ function gameRestart() {
  */
 
 function Floor(me, length, height) {
-    // log(arguments);
     me.width = (length || 1) * 8;
     me.height = (height * 8) || unitsizet32;
     me.spritewidth = 8;
@@ -2385,39 +2383,6 @@ function FlagCollisionTop(me, detector) {
             window.timeHandler.addEvent(FlagOff, 21, me);
         }
     }
-}
-
-// See http://themushroomkingdom.net/smb_breakdown.shtml near bottom
-// Stages: 8, 28, 40, 62
-function scorePlayerFlag(diff, stone) {
-    var amount;
-    // log(diff);
-    // Cases of...
-    if (diff < 28) {
-        // 0 to 8
-        if (diff < 8) {
-            amount = 100;
-        }
-        // 8 to 28
-        else {
-            amount = 400;
-        }
-    }
-    else {
-        // 28 to 40
-        if (diff < 40) {
-            amount = 800;
-        }
-        // 40 to 62
-        else if (diff < 62) {
-            amount = 2000;
-        }
-        // 62 to infinity and beyond
-        else {
-            amount = 5000;
-        }
-    }
-    score(player, amount, true);
 }
 
 function FlagOff(me, solid) {

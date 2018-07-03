@@ -6,9 +6,13 @@ mario.js
 */
 
 // Starts everything.
+window.onload = async () => {
+    const world11 = await (await fetch('/Maps/World11.json')).json();
+    startGame(world11);
+};
 
-function FullScreenMario() {
-    var time_start = Date.now();
+function startGame(world11) {
+    const time_start = Date.now();
 
     // I keep this cute little mini-library for some handy functions
     TonedJS(true);
@@ -27,7 +31,9 @@ function FullScreenMario() {
     resetCanvas();
     resetThings();
     resetScenery();
-    resetMapsManager();
+    resetMapsManager(); // maps.js
+    window.mapsManager.mapStore([1, 1], world11);
+
     resetStatsHolder();
     resetInputWriter();
     resetTriggers();

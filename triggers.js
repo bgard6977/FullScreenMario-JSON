@@ -63,7 +63,7 @@ function lulz(options, timer) {
   player.star = true;
   options = options || ["Goomba"];
   timer = timer || 7;
-  TimeHandler.addEventInterval(function() {
+    window.timeHandler.addEventInterval(function() {
     if(characters.length > 210) return;
     var lul = ObjectMaker.make(options[randInt(options.length)], randBoolJS(), randBoolJS());
     lul.yvel = random() * -unitsizet4;
@@ -80,7 +80,7 @@ function hyperlulz() {
 function maxlulz() {
   // Sigh....
   // window.palette = arrayShuffle(window.palette, 1);
-  TimeHandler.addEventInterval(function(arr) {
+    window.timeHandler.addEventInterval(function(arr) {
       setAreaSetting(arr[randInt(arr.length)]);
     }, 7, Infinity, ["Overworld", "Underworld", "Underwater", "Sky", "Castle"]);
 }

@@ -230,8 +230,8 @@ function setMap(name) {
     gamehistory = [];
     resetQuadrants();
     // From shiftToLocation
-    TimeHandler.clearAllEvents();
-    TimeHandler.addEventInterval(updateDataTime, 25, Infinity);
+    window.timeHandler.clearAllEvents();
+    window.timeHandler.addEventInterval(updateDataTime, 25, Infinity);
     resetGameState();
     window.gamescreen.resetGameScreenPosition();
     resetQuadrants();
@@ -352,7 +352,7 @@ function walkToPipe() {
     startWalking(player);
 
     var hasPipingStarted = false,
-        move = TimeHandler.addEventInterval(function () {
+        move = window.timeHandler.addEventInterval(function () {
             if (player.piping) {
                 // We have started piping
                 AudioPlayer.pauseTheme();

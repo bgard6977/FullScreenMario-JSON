@@ -475,7 +475,7 @@ function MapsManagr(settings) {
         window.gamescreen.resetGameScreenPosition();
         clearTexts();
         recipient.fillStyle = getAreaFillStyle(area_current.setting);
-        TimeHandler.addEvent(AudioPlayer.playTheme, 2);
+        window.timeHandler.addEvent(AudioPlayer.playTheme, 2);
 
         // If there's a function for this, do it
         if (on_entry) on_entry();

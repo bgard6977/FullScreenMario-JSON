@@ -94,7 +94,7 @@ function score(me, amount, appears) {
   if(appears) {
     var text = addText(amount, me.left, me.top);
     text.yvel = -unitsized4;
-    TimeHandler.addEvent(killScore, 49, text);
+    window.timeHandler.addEvent(killScore, 49, text);
   }
   
   // Check for life gaining (above 10000)

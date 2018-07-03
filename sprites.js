@@ -380,33 +380,41 @@ function refillThingCanvases(thing, parsed) {
 }
 
 // This is called every upkeep to refill the main canvas
-function refillCanvas() {
-    var canvas = window.canvas,
-        context = window.context,
-        things, thing, left, top, i;
-
-    // context.clearRect(0, 0, canvas.width, canvas.height);
-    context.fillStyle = window.fillStyle;
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    for (i = scenery.length - 1; i >= 0; --i) drawThingOnCanvas(context, scenery[i]);
-    for (i = solids.length - 1; i >= 0; --i) drawThingOnCanvas(context, solids[i]);
-    for (i = characters.length - 1; i >= 0; --i) drawThingOnCanvas(context, characters[i]);
-}
+const refillCanvas = () => {
+    window.context.fillStyle = window.fillStyle;
+    window.context.fillRect(0, 0, window.canvas.width, window.canvas.height);
+    for (let i = window.scenery.length - 1; i >= 0; --i) {
+        drawThingOnCanvas(window.context, window.scenery[i]);
+    }
+    for (let i = window.solids.length - 1; i >= 0; --i) {
+        drawThingOnCanvas(window.context, window.solids[i]);
+    }
+    for (let i = window.characters.length - 1; i >= 0; --i) {
+        drawThingOnCanvas(window.context, window.characters[i]);
+    }
+};
 
 // General function to draw a thing to a context
 // Calls drawThingOnCanvas[Single/Multiple] with more arguments
-function drawThingOnCanvas(context, me) {
-    if (me.hidden) return;
-    var leftc = me.left,
-        topc = me.top;
-    if (leftc > innerWidth) return;
+const drawThingOnCanvas = (context, me) => {
+    if (me.hidden) {
+        return;
+    }
+    let leftC = me.left;
+    let topC = me.top;
+    if (leftC > innerWidth) {
+        return;
+    }
 
     // If there's just one sprite, it's pretty simple
     // drawThingOnCanvasSingle(context, me.canvas, me, leftc, topc);
-    if (me.num_sprites == 1) drawThingOnCanvasSingle(context, me.canvas, me, leftc, topc);
-    // Otherwise some calculations will be needed
-    else drawThingOnCanvasMultiple(context, me.canvases, me.canvas, me, leftc, topc);
-}
+    if (me.num_sprites == 1) {
+        drawThingOnCanvasSingle(context, me.canvas, me, leftC, topC);
+    } else {
+        // Otherwise some calculations will be needed
+        drawThingOnCanvasMultiple(context, me.canvases, me.canvas, me, leftC, topC);
+    }
+};
 
 // Used for the vast majority of sprites, where only one sprite is drawn
 function drawThingOnCanvasSingle(context, canvas, me, leftc, topc) {

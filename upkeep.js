@@ -124,8 +124,7 @@ function maintainPlayer() {
                     switchClass(player, "paddling", "paddling");
                     player.padding = true;
                 }
-            }
-            else {
+            } else {
                 addClass(player, "jumping");
                 player.jumping = true;
             }

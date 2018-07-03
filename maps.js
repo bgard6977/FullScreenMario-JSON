@@ -3,7 +3,7 @@
 // Contains functions for creating, populating, and using maps
 
 function resetMapsManager() {
-    window.MapsManager = new MapsManagr({
+    window.mapsManager = new MapsManagr({
         prething_maker: ObjectMaker,
         recipient: window.map_settings || window,
         recipient_receives: [
@@ -34,7 +34,7 @@ function resetMapsManager() {
         },
         entry_default: "plain",
         on_entry: function () {
-            MapsManager.spawnMap((gamescreen.right + QuadsKeeper.getOutDifference()) / unitsize);
+            window.mapsManager.spawnMap((gamescreen.right + QuadsKeeper.getOutDifference()) / unitsize);
         },
         macros: {
             "Floor": makeFloor,
@@ -218,14 +218,14 @@ function resetMapsManager() {
         ]
     };
 
-    MapsManager.mapStore([1, 1], World11JSON);
+    window.mapsManager.mapStore([1, 1], World11JSON);
 }
 
 
 /* Map Transitions */
 
 function setMap(name) {
-    if (!name) name = MapsManager.getMapName();
+    if (!name) name = window.mapsManager.getMapName();
     gamecount = 0;
     gamehistory = [];
     resetQuadrants();
@@ -250,8 +250,7 @@ function setMap(name) {
         canscroll: true
     };
 
-    // MapsManager.setRecipient(map_settings);
-    MapsManager.setMap(name);
+    window.mapsManager.setMap(name);
     StatsHolder.set("world", name.join('-'));
     startDataTime();
     InputWriter.restart();
@@ -383,10 +382,10 @@ function locMovePreparations(me) {
 function goToTransport(transport) {
     // Goes to a new map
     if (transport instanceof Array) {
-        MapsManager.setMap(transport);
+        window.mapsManager.setMap(transport);
     }
     // Goes to a new Location
-    else MapsManager.setLocation(transport);
+    else window.mapsManager.setLocation(transport);
 }
 
 /* Misc. Helpers */

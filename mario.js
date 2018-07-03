@@ -191,7 +191,7 @@ function resetQuadrants() {
         screen_height: window.innerHeight,
         tolerance: unitsized2,
         onUpdate: function () {
-            MapsManager.spawnMap((gamescreen.right + QuadsKeeper.getOutDifference()) / unitsize);
+            window.mapsManager.spawnMap((gamescreen.right + QuadsKeeper.getOutDifference()) / unitsize);
         },
         onCollide: false
     });

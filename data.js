@@ -75,7 +75,7 @@ function toggleLuigi(nochange) {
 // Starts the interval of updating data time
 // 1 game second is about 25*16.667=416.675ms
 function startDataTime() {
-  StatsHolder.set("time", MapsManager.getArea().time);
+  StatsHolder.set("time", window.mapsManager.getArea().time);
 }
 function updateDataTime() {
   if(notime) return;

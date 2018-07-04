@@ -149,7 +149,7 @@ function TonedJS(give_window) {
     /* Number manipulations */
     
     // Converts ('7',3,1) to '117'
-    makeDigit: function(num, size, fill) {
+    makeDigit: function(num, size, fill) { /* called by sprites.js */
       num = String(num);
       return stringOf(fill || 0, max(0, size - num.length)) + num;
     },

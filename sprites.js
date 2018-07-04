@@ -5,14 +5,7 @@
 const resetCanvas = () => { /* called by mario.js */
     // The global canvas is one that fills the screen
     window.canvas = getCanvas(innerWidth, innerHeight, true);
-    // window.canvas = createElement(
-    // "canvas",
-    // {width: innerWidth,
-    // height: innerHeight,
-    // style: {
-    // width: innerWidth + "px",
-    // height: innerHeight + "px"
-    // }});
+
     // The context is saved for ease of access
     window.context = canvas.getContext("2d");
     document.body.appendChild(canvas);
@@ -29,11 +22,11 @@ const resetCanvas = () => { /* called by mario.js */
 // This is the first function called on strings in libraryParse
 // This could output the Uint8ClampedArray immediately if given the area - deliberately does not, for ease of storage
 const spriteUnravel = (colors) => {
-    let paletteref = getPaletteReferenceStarting(window.palette); // TODO: global
-    let digitsize = window.digitsize; // TODO: global
+    let paletteRef = getPaletteReferenceStarting(window.palette);
+    let digitSize = window.digitsize;
     let current;
     let rep;
-    let nixloc;
+    let nixLocation;
     let output = '';
     let loc = 0;
     while (loc < colors.length) {
@@ -41,36 +34,38 @@ const spriteUnravel = (colors) => {
             // A loop, ordered as 'x char times ,'
             case 'x':
                 // Get the location of the ending comma
-                nixloc = colors.indexOf(",", ++loc);
+                nixLocation = colors.indexOf(",", ++loc);
                 // Get the color
-                current = makeDigit(paletteref[colors.slice(loc, loc += digitsize)], window.digitsize);
+                current = makeDigit(paletteRef[colors.slice(loc, loc += digitSize)], window.digitsize);
                 // Get the rep times
-                rep = Number(colors.slice(loc, nixloc));
+                rep = Number(colors.slice(loc, nixLocation));
                 // Add that int to output, rep many times
-                while (rep--) output += current;
-                loc = nixloc + 1;
+                while (rep--) {
+                    output += current;
+                }
+                loc = nixLocation + 1;
                 break;
 
             // A palette changer, in the form 'p[X,Y,Z...]' (or 'p' for default)
             case 'p':
                 // If the next character is a '[', customize.
-                if (colors[++loc] == '[') {
-                    nixloc = colors.indexOf(']');
+                if (colors[++loc] === '[') {
+                    nixLocation = colors.indexOf(']');
                     // Isolate and split the new palette's numbers
-                    paletteref = getPaletteReference(colors.slice(loc + 1, nixloc).split(","));
-                    loc = nixloc + 1;
-                    digitsize = 1;
+                    paletteRef = getPaletteReference(colors.slice(loc + 1, nixLocation).split(","));
+                    loc = nixLocation + 1;
+                    digitSize = 1;
                 }
                 // Otherwise go back to default
                 else {
-                    paletteref = getPaletteReference(window.palette);
-                    digitsize = window.digitsize;
+                    paletteRef = getPaletteReference(window.palette);
+                    digitSize = window.digitsize;
                 }
                 break;
 
             // A typical number
             default:
-                output += makeDigit(paletteref[colors.slice(loc, loc += digitsize)], window.digitsize);
+                output += makeDigit(paletteRef[colors.slice(loc, loc += digitSize)], window.digitsize);
                 break;
         }
     }
@@ -80,20 +75,20 @@ const spriteUnravel = (colors) => {
 
 // Now that the sprite is unraveled, expand it to scale (repeat characters)
 // Height isn't known, so it'll be created during drawtime
-function spriteExpand(colors) {
-    var output = "",
-        clength = colors.length,
-        current, i = 0, j;
+const spriteExpand = (colors) => {
+    let output = '';
 
     // For each number,
-    while (i < clength) {
-        current = colors.slice(i, i += digitsize);
+    let i = 0;
+    while (i < colors.length) {
+        const current = colors.slice(i, i += digitsize);
         // Put it into output as many times as needed
-        for (j = 0; j < scale; ++j)
+        for (let j = 0; j < scale; ++j) {
             output += current;
+        }
     }
     return output;
-}
+};
 
 // Given the expanded version of colors, output the rgba array
 // To do: not be so crappy

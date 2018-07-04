@@ -136,13 +136,12 @@ function applyLibraryFilter(ref, filter) {
 }
 
 // Applies the filter to an object recursively
-function applyPaletteFilterRecursive(ref, filter) {
-    var obj = {}, found, i;
-    for (i in ref) {
-        found = ref[i];
+const applyPaletteFilterRecursive = (ref, filter) => {
+    const obj = {};
+    for (let i in ref) {
+        const found = ref[i];
         switch (found.constructor) {
             case String:
-                // if(i != "normal" || stringIsSprite(found)) obj[i] = spriteGetArray(spriteExpand(applyPaletteFilter(spriteUnravel(found), filter)));
                 obj[i] = spriteGetArray(spriteExpand(applyPaletteFilter(spriteUnravel(found), filter)));
                 break;
             case Object:
@@ -151,37 +150,37 @@ function applyPaletteFilterRecursive(ref, filter) {
         }
     }
     return obj;
-}
+};
 
 // Actually applies the filter
-function applyPaletteFilter(string, filter) {
-    var output = "", substr, i, len;
-    for (i = 0, len = string.length; i < len; i += digitsize) {
-        substr = string.substr(i, digitsize);
+const applyPaletteFilter = (string, filter) => {
+    let output = '';
+    const len = string.length;
+    for (let i = 0; i < len; i += digitsize) {
+        const substr = string.substr(i, digitsize);
         output += filter[substr] || substr;
     }
     return output;
-}
+};
 
 // Returns an obj and the parsed version of the following parts of command
 // To do: should support filters in the future... is it a simple push?
-function evaluatePostMultiple(command) {
-    var type = command[1],
-        refs = command[2],
-        obj = new SpriteMultiple(type),
-        ref, i;
-    for (i in refs) {
-        ref = refs[i];
+const evaluatePostMultiple = (command) => {
+    const type = command[1];
+    const refs = command[2];
+    const obj = new SpriteMultiple(type);
+    for (let i in refs) {
+        const ref = refs[i];
         // To do: enable th emore advanced stuff here, like filtering
         // If it's a string, parse it
-        if (typeof(ref) == "string") {
+        if (typeof(ref) === "string") {
             obj[i] = spriteGetArray(spriteExpand(spriteUnravel(ref)));
         }
         // Otherwise just make it a regular member
         else obj[i] = ref;
     }
     return obj;
-}
+};
 
 // Used so object.constructor.name is super awesome
 // Type is 'horizontal' or 'vertical'

@@ -7,11 +7,12 @@ mario.js
 
 // Starts everything.
 window.onload = async () => {
-    const world11 = await (await fetch('/Maps/World11.json')).json();
-    startGame(world11);
+    const world11 = await (await fetch('/data/maps/World11.json')).json();
+    const library = await (await fetch('/data/library.json')).json();
+    startGame(world11, library);
 };
 
-function startGame(world11) {
+function startGame(world11, library) {
     const time_start = Date.now();
 
     // I keep this cute little mini-library for some handy functions
@@ -26,7 +27,7 @@ function startGame(world11) {
 
     // Resetting everything may take a while
     resetMeasurements();
-    resetLibrary(); // library.js
+    resetLibrary(library); // library.js
     resetEvents();
     resetCanvas(); // sprites.js
     resetThings(); // things.js

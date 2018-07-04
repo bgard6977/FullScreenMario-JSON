@@ -1,9 +1,3 @@
-/*
-library.js
-|
-+- sprites.js - spireUnravel(), spriteExpand(), getSpriteArray()
-*/
-
 // Loads the library of raw data, then parses it
 
 function resetLibrary(library) {
@@ -64,42 +58,40 @@ function resetLibrary(library) {
 
 // Given an object in the library, parse it into sprite data
 const libraryParse = (spriteMap) => {
-    const setnew = {};
+    const setNew = {};
     for (let spriteName in spriteMap) {
         const objref = spriteMap[spriteName];
         switch (objref.constructor) {
             // If it's a string, parse it (unless it's a normal setter)
             case String:
-                setnew[spriteName] = spriteGetArray(spriteExpand(spriteUnravel(objref)));
+                setNew[spriteName] = spriteGetArray(spriteExpand(spriteUnravel(objref)));
                 break;
             // If it's an array, it should have a command such as 'same' to be post-processed
             case Array:
-                library.posts.push({caller: setnew, name: spriteName, command: spriteMap[spriteName]});
+                library.posts.push({caller: setNew, name: spriteName, command: spriteMap[spriteName]});
                 break;
             // If it's an object, recurse
             case Object:
-                setnew[spriteName] = libraryParse(objref);
+                setNew[spriteName] = libraryParse(objref);
                 break;
         }
     }
-    return setnew;
+    return setNew;
 };
 
 // Evaulates the post commands (e.g. 'same', 'filter')
-function libraryPosts() {
-    var posts = library.posts,
-        post, caller, name, command,
-        i;
-    for (i in posts) {
-        post = posts[i];
-        caller = post.caller;
-        name = post.name;
-        command = post.command;
+const libraryPosts = () => {
+    const posts = library.posts;
+    for (let i in posts) {
+        const post = posts[i];
+        const caller = post.caller;
+        const name = post.name;
+        const command = post.command;
         caller[name] = evaluatePost(caller, command, i);
     }
-}
+};
 
-function evaluatePost(caller, command, i) {
+const evaluatePost = (caller, command) => {
     switch (command[0]) {
         // Same: just returns a reference to the target
         // ["same", ["container", "path", "to", "target"]]
@@ -109,9 +101,9 @@ function evaluatePost(caller, command, i) {
         // Filter: takes a reference to the target, and applies a filter to it
         // ["filter", ["container", "path", "to", "target"], filters.DoThisFilter]
         case "filter":
-            var ref = followPath(library.rawsprites, command[1], 0),
-                filter = command[2];
-            return applyLibraryFilter(ref, filter, i);
+            const ref = followPath(library.rawsprites, command[1], 0);
+            const filter = command[2];
+            return applyLibraryFilter(ref, filter);
 
         // Multiple: uses more than one image, either vertically or horizontally
         // Not to be confused with having .repeat = true.
@@ -122,18 +114,20 @@ function evaluatePost(caller, command, i) {
         case "multiple":
             return evaluatePostMultiple(command);
     }
-}
+};
 
 // Supported filters:
 // * palette
 // * absolutely nothing else.
-function applyLibraryFilter(ref, filter) {
+const applyLibraryFilter = (ref, filter) => {
     switch (filter[0]) {
         case "palette": // only one used so far
-            if (ref.constructor == String) return spriteGetArray(spriteExpand(applyPaletteFilter(spriteUnravel(ref), filter[1])));
+            if (ref.constructor === String) {
+                return spriteGetArray(spriteExpand(applyPaletteFilter(spriteUnravel(ref), filter[1])));
+            }
             return applyPaletteFilterRecursive(ref, filter[1]);
     }
-}
+};
 
 // Applies the filter to an object recursively
 const applyPaletteFilterRecursive = (ref, filter) => {

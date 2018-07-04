@@ -1,10 +1,3 @@
-/*
-mario.js
-+-+ library.js
-  |
-  +- sprites.js
-*/
-
 // Starts everything.
 window.onload = async () => {
     const world11 = await (await fetch('/data/maps/World11.json')).json();

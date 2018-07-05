@@ -266,24 +266,28 @@ const expandObtainedSpriteMultiple = (sprites, thing, width, height) => {
 };
 
 // Called when getSpriteFromLibrary has determined the cache doesn't contain the thing
-function findSpriteInLibrary(thing, current, classes) {
-    var nogood, check, i, prev = current;
+const findSpriteInLibrary = (thing, current, classes) => {
 
     // If it's a sprite multiple, return that
-    if (current.multiple) return current;
+    if (current.multiple) {
+        return current;
+    }
 
     // TO DO: GET RID OF THIS IN RELEASE
-    var loop_num = 0;
+    let loopNum = 0;
 
     // Otherwise, keep searching deeper until a string or SpriteMultiple is found
+    let prev = current;
+    let nogood;
+    let check;
     while (nogood = true) {
         // TO DO: GET RID OF THIS IN RELEASE
-        if (++loop_num > 49) {
+        if (++loopNum > 49) {
             alert(thing.title);
             console.log(thing.title, classes, current);
         }
         // If one of the classes is a child of current, go there and remove the class
-        for (i in classes) {
+        for (let i in classes) {
             if (check = current[classes[i]]) {
                 current = check;
                 classes.splice(i, 1);
@@ -332,7 +336,7 @@ function findSpriteInLibrary(thing, current, classes) {
             return new Uint8ClampedArray(thing.spritewidth * thing.spriteheight);
         }
     }
-}
+};
 
 /* Pixel drawing */
 // With sprites set, they must be drawn

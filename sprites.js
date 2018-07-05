@@ -117,21 +117,16 @@ const spriteGetArray = (colors) => {
 
 // Goes through all the motions of finding and parsing a thing's sprite
 // This is called when the sprite's appearance changes.
-function setThingSprite(thing) {
-    if (thing.hidden || !thing.title) return;
+const setThingSprite = (thing) => {
+    if (thing.hidden || !thing.title) {
+        return;
+    }
     // The cache is first chcked for previous references to the same className
-    var cache = library.cache,
-        width = thing.spritewidth,
-        height = thing.spriteheight,
-        title = thing.title,
-        className = thing.className,
-        classes = className.split(/\s+/g).slice(1).sort(), // first one will be thing type (character, solid...)
-        key = title + " " + classes, // ex: "Player player,running,small,two"
-        cached = cache[key],
-        sprite;
+    const width = thing.spritewidth;
+    const height = thing.spriteheight;
 
     // If one isn't found, search for it manually
-    sprite = getSpriteFromLibrary(thing);
+    const sprite = getSpriteFromLibrary(thing);
     if (!sprite) {
         console.log("Could not get sprite from library on " + thing.title);
         return;
@@ -139,12 +134,11 @@ function setThingSprite(thing) {
     if (sprite.multiple) {
         expandObtainedSpriteMultiple(sprite, thing, width, height);
         thing.sprite_type = sprite.type;
-    }
-    else {
+    } else {
         expandObtainedSprite(sprite, thing, width, height);
         thing.sprite_type = "normal";
     }
-}
+};
 
 // Given a thing, it will determine which sprite in library.sprites it should use
 // This is based off a key which uses the setting, title, and classes
@@ -174,7 +168,7 @@ function getSpriteFromLibrary(thing) {
             return;
         }
         // If it's more complicated, search for it
-        if (sprite.constructor != Uint8ClampedArray) {
+        if (sprite.constructor !== Uint8ClampedArray) {
             sprite = findSpriteInLibrary(thing, sprite, classes);
         }
 
@@ -235,29 +229,32 @@ function expandObtainedSprite(sprite, thing, width, height, norefill) {
 }
 
 // A set of multiple sprites must each be manipulated individually
-function expandObtainedSpriteMultiple(sprites, thing, width, height) {
+const expandObtainedSpriteMultiple = (sprites, thing, width, height) => {
     // The middle (repeated) sprite is used as normal
-    var parsed = {}, sprite, part;
+    const parsed = {};
+    let sprite;
     thing.num_sprites = 0;
 
     // Expand each array from the multiple sprites to parsed
-    for (part in sprites) {
+    for (let part in sprites) {
         // If it's an actual sprite array, parse it
-        if ((sprite = sprites[part]).constructor == Uint8ClampedArray) {
+        if ((sprite = sprites[part]).constructor === Uint8ClampedArray) {
             ++thing.num_sprites;
             parsed[part] = expandObtainedSprite(sprite, thing, width, height, true);
+        } else if (typeof(sprite) === "number") {
+            // If it's a number, multiply it by the scale
+            parsed[part] = sprite * scale;
+        } else {
+            // Otherwise just add it
+            parsed[part] = sprite;
         }
-        // If it's a number, multiply it by the scale
-        else if (typeof(sprite) == "number") parsed[part] = sprite * scale;
-        // Otherwise just add it
-        else parsed[part] = sprite;
     }
 
     // Set the thing canvas (parsed.middle)
     thing.sprite = parsed.middle;
     thing.sprites = parsed;
     refillThingCanvases(thing, parsed);
-}
+};
 
 // Called when getSpriteFromLibrary has determined the cache doesn't contain the thing
 function findSpriteInLibrary(thing, current, classes) {

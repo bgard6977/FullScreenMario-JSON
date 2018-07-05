@@ -5,8 +5,8 @@ window.onload = async () => {
     startGame(world11, library);
 };
 
-function startGame(world11, library) {
-    const time_start = Date.now();
+const startGame = (world11, library) => {
+    const timeStart = Date.now();
 
     // I keep this cute little mini-library for some handy functions
     TonedJS(true);
@@ -36,8 +36,8 @@ function startGame(world11, library) {
     window.statsHolder.set("lives", 3);
     setMap([1, 1]);
 
-    console.log("It took " + (Date.now() - time_start) + " milliseconds to start.");
-}
+    console.log("It took " + (Date.now() - timeStart) + " milliseconds to start.");
+};
 
 /* Basic reset operations */
 const resetMeasurements = () => {
@@ -79,9 +79,9 @@ const resetTimer = (rawNum) => {
 class GameScreen {
     constructor() {
         this.resetGameScreenPosition();
+
         // Middlex is static and only used for scrolling to the right
         this.middlex = (this.left + this.right) / 2;
-        // this.middlex = (this.left + this.right) / 3;
 
         // This is the bottom of the screen - water, pipes, etc. go until here
         window.botmax = this.height - ceilmax;
@@ -118,40 +118,50 @@ const resetEvents = () => {
 
 // Quadrants are done with QuadsKeepr.js
 // This starts off with 7 cols and 6 rows (each has 1 on each side for padding)
-function resetQuadrants() {
+const resetQuadrants = () => {
     window.quadsKeeper = new QuadsKeepr({
         num_rows: 5,
         num_cols: 6,
         screen_width: window.innerWidth,
         screen_height: window.innerHeight,
         tolerance: unitsized2,
-        onUpdate: function () {
+        onUpdate: () => {
             window.mapsManager.spawnMap((gamescreen.right + window.quadsKeeper.getOutDifference()) / unitsize);
         },
         onCollide: false
     });
-}
+};
 
 // Variables regarding the state of the game
 // This is called in setMap to reset everything
-function resetGameState(nocount) {
+const resetGameState = (nocount) => {
     // HTML is reset here
     clearAllTimeouts();
-    window.nokeys = window.spawning = window.spawnon =
-        window.notime = window.editing = window.qcount = window.lastscroll = 0;
-    window.paused = window.gameon = window.speed = 1;
+    window.nokeys = 0;
+    window.spawning = 0;
+    window.spawnon = 0;
+    window.notime = 0;
+    window.editing = 0;
+    window.qcount = 0;
+    window.lastscroll = 0;
+    window.paused = 1;
+    window.gameon = 1;
+    window.speed = 1;
     // Shifting location shouldn't wipe the gamecount (for key histories)
-    if (!nocount) window.gamecount = 0;
+    if (!nocount) {
+        window.gamecount = 0;
+    }
     // And quadrants
     resetQuadrants();
     // Keep a history of pressed keys
     window.gamehistory = [];
-}
+};
 
-function scrollWindow(x, y) {
+const scrollWindow = (x, y) => {
     x = x || 0;
     y = y || 0;
-    var xinv = -x, yinv = -y;
+    const xinv = -x;
+    const yinv = -y;
 
     gamescreen.left += x;
     gamescreen.right += x;
@@ -165,29 +175,32 @@ function scrollWindow(x, y) {
     shiftElements(texts, xinv, yinv);
     window.quadsKeeper.updateQuadrants(xinv);
 
-    if (window.playediting) scrollEditor(x, y);
-}
+    if (window.playediting) {
+        scrollEditor(x, y);
+    }
+};
 
-function shiftAll(stuff, x, y) {
-    for (var i = stuff.length - 1; i >= 0; --i)
+const shiftAll = (stuff, x, y) => {
+    for (let i = stuff.length - 1; i >= 0; --i) {
         shiftBoth(stuff[i], x, y);
-}
+    }
+};
 
-function shiftElements(stuff, x, y) {
-    for (var i = stuff.length - 1, elem; i >= 0; --i) {
-        elem = stuff[i];
+const shiftElements = (stuff, x, y) => {
+    for (let i = stuff.length - 1; i >= 0; --i) {
+        const elem = stuff[i];
         elementShiftLeft(elem, x);
         elementShiftTop(elem, y);
     }
-}
+};
 
 // Similar to scrollWindow, but saves the player's x-loc
-function scrollPlayer(x, y, see) {
-    var saveleft = player.left,
-        savetop = player.top;
+const scrollPlayer = (x, y, see) => {
+    const saveLeft = player.left;
+    const saveTop = player.top;
     y = y || 0;
     scrollWindow(x, y);
-    setLeft(player, saveleft, see);
-    setTop(player, savetop + y * unitsize, see);
+    setLeft(player, saveLeft, see);
+    setTop(player, saveTop + y * unitsize, see);
     window.quadsKeeper.updateQuadrants();
-}
+};

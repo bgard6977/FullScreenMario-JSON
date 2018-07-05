@@ -12,11 +12,11 @@ const startGame = (world11, library) => {
     TonedJS(true);
 
     // It's useful to keep references to the body
-    window.body = document.body; // TODO: remove global
-    window.bodystyle = body.style; // TODO: remove global
+    window.body = document.body;
+    window.bodystyle = body.style;
 
     // Know when to shut up
-    window.verbosity = {Maps: false}; // TODO: remove global
+    window.verbosity = {Maps: false}; 
 
     // Resetting everything may take a while
     resetMeasurements();
@@ -60,20 +60,20 @@ const resetMeasurements = () => {
 const resetUnitsize = (num) => {
     window.unitsize = num;
     for (let i = 2; i <= 64; ++i) {
-        window["unitsizet" + i] = unitsize * i; // TODO: remove global
-        window["unitsized" + i] = unitsize / i; // TODO: remove global
+        window["unitsizet" + i] = unitsize * i;
+        window["unitsized" + i] = unitsize / i;
     }
-    window.scale = unitsized2; // Typically 2 // TODO: remove global
-    window.gravity = round(12 * unitsize) / 100; // Typically .48 // TODO: remove global
+    window.scale = unitsized2; // Typically 2
+    window.gravity = round(12 * unitsize) / 100; // Typically .48
 };
 
 const resetTimer = (rawNum) => {
     const num = roundDigit(rawNum, .001);
-    window.timer = window.timernorm = num; // TODO: remove global
-    window.timert2 = num * 2; // TODO: remove global
-    window.timerd2 = num / 2; // TODO: remove global
-    window.fps = window.fps_target = roundDigit(1000 / num, .001); // TODO: remove global
-    window.time_prev = Date.now(); // TODO: remove global
+    window.timer = window.timernorm = num;
+    window.timert2 = num * 2;
+    window.timerd2 = num / 2;
+    window.fps = window.fps_target = roundDigit(1000 / num, .001); 
+    window.time_prev = Date.now();
 };
 
 class GameScreen {

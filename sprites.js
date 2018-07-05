@@ -142,24 +142,24 @@ const setThingSprite = (thing) => {
 
 // Given a thing, it will determine which sprite in library.sprites it should use
 // This is based off a key which uses the setting, title, and classes
-function getSpriteFromLibrary(thing) {
-    var cache = library.cache,
-        title = thing.title,
-        libtype = thing.libtype,
-        className = thing.className,
-        classes = className.split(/\s+/g).slice(1).sort(),
-        setting = (window.setting || window.defaultsetting).split(' '),
-        key, cached, sprite,
-        i;
+const getSpriteFromLibrary = (thing) => {
+    const cache = library.cache;
+    const title = thing.title;
+    const libtype = thing.libtype;
+    const className = thing.className;
+    const classes = className.split(/\s+/g).slice(1).sort();
+    const setting = (window.setting || window.defaultsetting).split(' ');
 
     // So it knows to do these conditionally, add them to the front
-    for (i in setting) classes.unshift(setting[i]);
+    for (let i in setting) {
+        classes.unshift(setting[i]);
+    }
 
-    key = title + " " + classes; // ex: "Player player,running,small,two"
-    cached = cache[key],
-        sprite;
+    const key = title + " " + classes; // ex: "Player player,running,small,two"
+    let cached = cache[key];
 
     // Since one isn't found, search for it manually
+    let sprite;
     if (!cached) {
         sprite = library.sprites[libtype][title];
         if (!sprite || !sprite.constructor) {
@@ -174,30 +174,40 @@ function getSpriteFromLibrary(thing) {
 
         // The plain data has been found, so that shall be saved
         cached = cache[key] = {raw: sprite};
+    } else {
+        sprite = cached.raw;
     }
-    else sprite = cached.raw;
 
     // The raw cache has been found or set: now to adjust for flipping
     // To do: use .flip-horiz, .flip-vert
     switch (String(Number(classes.indexOf("flipped") >= 0)) + String(Number(classes.indexOf("flip-vert") >= 0))) {
         case "11":
-            if (!cached["flipboth"]) sprite = cached["flipboth"] = flipSpriteArrayBoth(sprite);
-            else sprite = cached["flipboth"];
+            if (!cached["flipboth"]) {
+                sprite = cached["flipboth"] = flipSpriteArrayBoth(sprite);
+            } else {
+                sprite = cached["flipboth"];
+            }
             break;
         case "10":
-            if (!cached["fliphoriz"]) sprite = cached["fliphoriz"] = flipSpriteArrayHoriz(sprite, thing);
-            else sprite = cached["fliphoriz"];
+            if (!cached["fliphoriz"]) {
+                sprite = cached["fliphoriz"] = flipSpriteArrayHoriz(sprite, thing);
+            } else {
+                sprite = cached["fliphoriz"];
+            }
             break;
         case "01":
-            if (!cached["flipvert"]) sprite = cached["flipvert"] = flipSpriteArrayVert(sprite, thing);
-            else sprite = cached["flipvert"];
+            if (!cached["flipvert"]) {
+                sprite = cached["flipvert"] = flipSpriteArrayVert(sprite, thing);
+            } else {
+                sprite = cached["flipvert"];
+            }
             break;
         default:
             sprite = cached.raw;
     }
 
     return sprite;
-}
+};
 
 // The typical use case: given a sprite and thing+dimensions, expand it based on scale and write it to the sprite
 function expandObtainedSprite(sprite, thing, width, height, norefill) {

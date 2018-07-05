@@ -145,7 +145,7 @@ const setThingSprite = (thing) => {
 const getSpriteFromLibrary = (thing) => {
     const cache = library.cache;
     const title = thing.title;
-    const libtype = thing.libtype;
+    const libType = thing.libtype;
     const className = thing.className;
     const classes = className.split(/\s+/g).slice(1).sort();
     const setting = (window.setting || window.defaultsetting).split(' ');
@@ -161,10 +161,10 @@ const getSpriteFromLibrary = (thing) => {
     // Since one isn't found, search for it manually
     let sprite;
     if (!cached) {
-        sprite = library.sprites[libtype][title];
+        sprite = library.sprites[libType][title];
         if (!sprite || !sprite.constructor) {
             console.warn("Error in checking for sprite of " + title + ".");
-            console.log("Title " + title, "\nLibtype " + libtype, "\nclassName " + thing.className, "\n", thing, "\n");
+            console.log("Title " + title, "\nLibtype " + libType, "\nclassName " + thing.className, "\n", thing, "\n");
             return;
         }
         // If it's more complicated, search for it
@@ -210,33 +210,32 @@ const getSpriteFromLibrary = (thing) => {
 };
 
 // The typical use case: given a sprite and thing+dimensions, expand it based on scale and write it to the sprite
-function expandObtainedSprite(sprite, thing, width, height, norefill) {
+const expandObtainedSprite = (sprite, thing, width, height, noRefill) => {
     // With the rows set, repeat them by unitsize to create the final, parsed product
-    var parsed = new Uint8ClampedArray(sprite.length * scale),
-        rowsize = width * unitsizet4,
-        heightscale = height * scale,
-        readloc = 0,
-        writeloc = 0,
-        si, sj;
+    const parsed = new Uint8ClampedArray(sprite.length * scale);
+    const rowSize = width * unitsizet4;
+    const heightScale = height * scale;
+    let readLoc = 0;
+    let writeLoc = 0;
 
     // For each row:
-    for (si = 0; si < heightscale; ++si) {
+    for (let si = 0; si < heightScale; ++si) {
         // Add it to parsed x scale
-        for (sj = 0; sj < scale; ++sj) {
-            memcpyU8(sprite, parsed, readloc, writeloc, rowsize/*, thing*/);
-            writeloc += rowsize;
+        for (let sj = 0; sj < scale; ++sj) {
+            memcpyU8(sprite, parsed, readLoc, writeLoc, rowSize);
+            writeLoc += rowSize;
         }
-        readloc += rowsize;
+        readLoc += rowSize;
     }
 
     // If this isn't part of a multiple sprite, record the sprite into the thing's canvas
-    if (!norefill) {
+    if (!noRefill) {
         thing.num_sprites = 1;
         thing.sprite = parsed;
         refillThingCanvas(thing);
     }
     return parsed;
-}
+};
 
 // A set of multiple sprites must each be manipulated individually
 const expandObtainedSpriteMultiple = (sprites, thing, width, height) => {
